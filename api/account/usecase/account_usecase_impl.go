@@ -69,7 +69,6 @@ func (a accountUsecase) GetToken(email string, password string) (token string) {
 	return tok
 }
 
-func NewAccountUsecase(accountMysql repository.IAccountMysql,
-) IAccountUsecase {
+func NewAccountUsecase(accountMysql repository.IAccountMysql) IAccountUsecase {
 	return &accountUsecase{accountMysql: accountMysql}
 }
