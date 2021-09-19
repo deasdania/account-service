@@ -5,6 +5,7 @@ import (
 	"account-metalit/api/models"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	// "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 	"os"
 	"time"
@@ -49,6 +50,15 @@ func (a accountUsecase) GenerateJWT(user *models.Users) (string, error) {
 	return tokenString, nil
 
 }
+
+// func (a accountUsecase) GenerateUuid() uuid.UUID {
+// 	myuuid := uuid.NewV4()
+// 	if string(myuuid) != "" {
+// 		return myuuid
+// 	} else {
+// 		return "uuid not generated"
+// 	}
+// }
 
 func (a accountUsecase) GetToken(email string, password string) (token string) {
 	user, err := a.accountMysql.GetAccountByEmail(email)
