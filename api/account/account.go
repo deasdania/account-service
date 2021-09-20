@@ -2,10 +2,12 @@ package account
 
 import (
 	"account-metalit/api/account/usecase"
+	"account-metalit/api/models"
 	"account-metalit/utilities"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/satori/go.uuid"
+	// "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"net/http"
 	"reflect"
 )
@@ -43,26 +45,29 @@ func (a Account) Login(c *gin.Context) {
 }
 
 func (a Account) CreateAccount(c *gin.Context) {
-	// email := c.PostForm("email")
+	name := c.PostForm("name")
+	email := c.PostForm("email")
 	password := c.PostForm("password")
 	confirm_password := c.PostForm("confirm_password")
 
-	if password != confirm_password {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "password and confirm password not same",
-		})
-	} else {
-
+	form_register := models.FormRegister{
+		Name:            name,
+		Email:           email,
+		Password:        password,
+		ConfirmPassword: confirm_password,
 	}
-	// c.JSON(http.StatusOK, gin.H{
-	// 	"email":            email,
-	// 	"password":         password,
-	// 	"confirm_password": confirm_password,
-	// })
+	// fmt.Println(form_register)
+	msg := a.AccountUsecase.CreateUser(form_register)
+	fmt.Println(msg)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": msg,
+	})
+
 }
 
 func (a Account) GenerateUuid(c *gin.Context) {
-	myuuid := uuid.NewV4()
+	myuuid := uuid.New().String()
 	c.JSON(http.StatusOK, gin.H{
 		"uuid": myuuid,
 	})

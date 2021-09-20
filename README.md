@@ -5,6 +5,8 @@ Run this to install packages first
 go mod tidy
 ```
 
+## Create DB
+Create db with file struct_accountSvc.sql on the project root
 
 ## Environment Variable
 Fill the empty string with yours

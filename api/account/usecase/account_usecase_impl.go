@@ -5,9 +5,10 @@ import (
 	"account-metalit/api/models"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	// "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"os"
+	"regexp"
 	"time"
 )
 
@@ -51,14 +52,65 @@ func (a accountUsecase) GenerateJWT(user *models.Users) (string, error) {
 
 }
 
-// func (a accountUsecase) GenerateUuid() uuid.UUID {
-// 	myuuid := uuid.NewV4()
-// 	if string(myuuid) != "" {
-// 		return myuuid
-// 	} else {
-// 		return "uuid not generated"
-// 	}
-// }
+//The password strength must be letter size + number + sign, 9 digits or more
+func (a accountUsecase) CheckPasswordLever(ps string) error {
+	if len(ps) < 9 {
+		return fmt.Errorf("password len is < 9")
+	}
+	num := `[0-9]{1}`
+	a_z := `[a-z]{1}`
+	A_Z := `[A-Z]{1}`
+	symbol := `[!@#~$%^&*()+|_]{1}`
+	if b, err := regexp.MatchString(num, ps); !b || err != nil {
+		return fmt.Errorf("password need num :%v", err)
+	}
+	if b, err := regexp.MatchString(a_z, ps); !b || err != nil {
+		return fmt.Errorf("password need a_z :%v", err)
+	}
+	if b, err := regexp.MatchString(A_Z, ps); !b || err != nil {
+		return fmt.Errorf("password need A_Z :%v", err)
+	}
+	if b, err := regexp.MatchString(symbol, ps); !b || err != nil {
+		return fmt.Errorf("password need symbol :%v", err)
+	}
+	return nil
+}
+
+func (a accountUsecase) CheckUserExist(email string) bool {
+	_, err := a.accountMysql.GetAccountByEmail(email)
+	if err != nil {
+		return false
+	}
+	return true
+}
+func (a accountUsecase) CreateUser(form_register models.FormRegister) string {
+	fmt.Println(form_register)
+	exist := a.CheckUserExist(form_register.Email)
+	err := a.CheckPasswordLever(form_register.Password)
+	if exist {
+		return "user already exist"
+	} else if err != nil {
+		return err.Error()
+	} else if form_register.Password != form_register.ConfirmPassword {
+		return "password and confirm password not same"
+	} else {
+		hash, _ := a.HashPassword(form_register.Password)
+		// return a.accountMysql.Begin(func(db *gorm.DB) error {
+		user := models.Users{
+			Name:     form_register.Name,
+			Uuid:     uuid.New().String(),
+			Email:    form_register.Email,
+			Password: hash,
+		}
+		err := a.accountMysql.CreateAccount(&user)
+		if err != nil {
+			return "error when creating accounts"
+		}
+		// }
+		// generate uuid, hash the password, create new
+		return "success"
+	}
+}
 
 func (a accountUsecase) GetToken(email string, password string) (token string) {
 	user, err := a.accountMysql.GetAccountByEmail(email)

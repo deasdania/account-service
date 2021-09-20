@@ -18,6 +18,14 @@ func (a accountMysql) GetAccountById(id string) (*models.Users, error) {
 	return &user, nil
 }
 
+func (a accountMysql) CreateAccount(user *models.Users) error {
+	result := a.db.Debug().Table("users").Create(&user)
+	if result.RowsAffected == 0 {
+		return result.Error
+	}
+	return result.Error
+}
+
 func (a accountMysql) GetAccountByEmail(email string) (*models.Users, error) {
 	var user models.Users
 	err := a.db.Debug().Table("users").First(&user, "email = ?", email)
