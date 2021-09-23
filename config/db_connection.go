@@ -1,6 +1,7 @@
 package config
 
 import (
+	"account-metalit/api/models"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 
@@ -22,5 +23,6 @@ func InitDb() *gorm.DB {
 		panic(err)
 		return nil
 	}
+	db.AutoMigrate(&models.Users{})
 	return db
 }

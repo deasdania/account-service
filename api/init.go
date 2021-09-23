@@ -5,6 +5,7 @@ import (
 	"account-metalit/api/account/repository"
 	"account-metalit/api/account/usecase"
 	"account-metalit/config"
+	"account-metalit/response"
 	"account-metalit/utilities"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,8 @@ func Init(r *gin.Engine) {
 
 	//account
 	accountMysql := repository.NewAccountMysql(db)
-	accountUsecase := usecase.NewAccountUsecase(accountMysql)
+	responseStruct := response.InitResponse()
+	accountUsecase := usecase.NewAccountUsecase(accountMysql, responseStruct)
 	accountController := account.Account{AccountUsecase: accountUsecase}
 	accountController.Account(v1)
 

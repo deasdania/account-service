@@ -28,9 +28,7 @@ func (a Account) Account(r *gin.RouterGroup) {
 func (a Account) GetUser(c *gin.Context) {
 	user := a.AccountUsecase.GetUser("1")
 	fmt.Println(reflect.TypeOf(user))
-	c.JSON(http.StatusOK, gin.H{
-		"user": user,
-	})
+	c.JSON(user.Status, user)
 }
 
 func (a Account) Login(c *gin.Context) {
@@ -57,12 +55,9 @@ func (a Account) CreateAccount(c *gin.Context) {
 		ConfirmPassword: confirm_password,
 	}
 	// fmt.Println(form_register)
-	msg := a.AccountUsecase.CreateUser(form_register)
-	fmt.Println(msg)
+	response := a.AccountUsecase.CreateUser(form_register)
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": msg,
-	})
+	c.JSON(response.Status, response)
 
 }
 

@@ -3,25 +3,30 @@ package usecase
 import (
 	"account-metalit/api/account/repository"
 	"account-metalit/api/models"
+	"account-metalit/response"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"os"
 	"regexp"
+	// "strings"
 	"time"
 )
 
 type accountUsecase struct {
-	accountMysql repository.IAccountMysql
+	accountMysql   repository.IAccountMysql
+	responseStruct response.IResponse
 }
 
-func (a accountUsecase) GetUser(id string) *models.Users {
+func (a accountUsecase) GetUser(id string) *response.Response {
 	user, err := a.accountMysql.GetAccountById(id)
 	if err != nil {
-		panic(err.Error())
+		fmt.Println(err.Error())
+		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
 	}
-	return user
+
+	return a.responseStruct.ResponseSuccess(200, []string{"Get User"}, user)
 }
 
 func (a accountUsecase) HashPassword(password string) (string, error) {
@@ -53,25 +58,37 @@ func (a accountUsecase) GenerateJWT(user *models.Users) (string, error) {
 }
 
 //The password strength must be letter size + number + sign, 9 digits or more
-func (a accountUsecase) CheckPasswordLever(ps string) error {
+func (a accountUsecase) CheckPasswordLever(ps string) []string {
+	errMessage := []string{}
+	isErr := false
 	if len(ps) < 9 {
-		return fmt.Errorf("password len is < 9")
+		errMessage = append(errMessage, "password len is < 9")
+		isErr = true
 	}
 	num := `[0-9]{1}`
 	a_z := `[a-z]{1}`
 	A_Z := `[A-Z]{1}`
 	symbol := `[!@#~$%^&*()+|_]{1}`
 	if b, err := regexp.MatchString(num, ps); !b || err != nil {
-		return fmt.Errorf("password need num :%v", err)
+		errMessage = append(errMessage, "password need num")
+		isErr = true
 	}
 	if b, err := regexp.MatchString(a_z, ps); !b || err != nil {
-		return fmt.Errorf("password need a_z :%v", err)
+		errMessage = append(errMessage, "password need a_z")
+		isErr = true
 	}
 	if b, err := regexp.MatchString(A_Z, ps); !b || err != nil {
-		return fmt.Errorf("password need A_Z :%v", err)
+		errMessage = append(errMessage, "password need A_Z")
+		isErr = true
 	}
 	if b, err := regexp.MatchString(symbol, ps); !b || err != nil {
-		return fmt.Errorf("password need symbol :%v", err)
+		errMessage = append(errMessage, "password need symbol")
+		isErr = true
+	}
+	// errAll := strings.Join(errMessage, ", ")
+	if isErr {
+		// return fmt.Errorf(errAll)
+		return errMessage
 	}
 	return nil
 }
@@ -83,19 +100,20 @@ func (a accountUsecase) CheckUserExist(email string) bool {
 	}
 	return true
 }
-func (a accountUsecase) CreateUser(form_register models.FormRegister) string {
+func (a accountUsecase) CreateUser(form_register models.FormRegister) *response.Response {
 	fmt.Println(form_register)
 	exist := a.CheckUserExist(form_register.Email)
-	err := a.CheckPasswordLever(form_register.Password)
 	if exist {
-		return "user already exist"
-	} else if err != nil {
-		return err.Error()
-	} else if form_register.Password != form_register.ConfirmPassword {
-		return "password and confirm password not same"
+		return a.responseStruct.ResponseError(400, []string{"user already exist"}, nil)
+	}
+	err := a.CheckPasswordLever(form_register.Password)
+	if err != nil {
+		return a.responseStruct.ResponseError(400, err, nil)
+	}
+	if form_register.Password != form_register.ConfirmPassword {
+		return a.responseStruct.ResponseError(400, []string{"password and confirm password not same"}, nil)
 	} else {
 		hash, _ := a.HashPassword(form_register.Password)
-		// return a.accountMysql.Begin(func(db *gorm.DB) error {
 		user := models.Users{
 			Name:     form_register.Name,
 			Uuid:     uuid.New().String(),
@@ -104,18 +122,16 @@ func (a accountUsecase) CreateUser(form_register models.FormRegister) string {
 		}
 		err := a.accountMysql.CreateAccount(&user)
 		if err != nil {
-			return "error when creating accounts"
+			return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
 		}
-		// }
-		// generate uuid, hash the password, create new
-		return "success"
+		return a.responseStruct.ResponseError(200, []string{"Create User"}, user)
 	}
 }
 
 func (a accountUsecase) GetToken(email string, password string) (token string) {
 	user, err := a.accountMysql.GetAccountByEmail(email)
 	if err != nil {
-		panic(err.Error())
+		fmt.Println(err.Error())
 	}
 	match := a.CheckPasswordHash(password, user.Password)
 
@@ -123,7 +139,7 @@ func (a accountUsecase) GetToken(email string, password string) (token string) {
 	if match {
 		tok, err = a.GenerateJWT(user)
 		if err != nil {
-			panic(err.Error())
+			fmt.Println(err.Error())
 		}
 	} else {
 		tok = ""
@@ -131,6 +147,6 @@ func (a accountUsecase) GetToken(email string, password string) (token string) {
 	return tok
 }
 
-func NewAccountUsecase(accountMysql repository.IAccountMysql) IAccountUsecase {
-	return &accountUsecase{accountMysql: accountMysql}
+func NewAccountUsecase(accountMysql repository.IAccountMysql, responseStruct response.IResponse) IAccountUsecase {
+	return &accountUsecase{accountMysql: accountMysql, responseStruct: responseStruct}
 }
