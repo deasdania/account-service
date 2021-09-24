@@ -4,6 +4,7 @@ import (
 	"account-metalit/api/account/repository"
 	"account-metalit/api/models"
 	"account-metalit/response"
+	"account-metalit/utilities"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
@@ -40,7 +41,7 @@ func (a accountUsecase) CheckPasswordHash(password, hash string) bool {
 }
 
 func (a accountUsecase) GenerateJWT(user *models.Users) (string, error) {
-	var secretJWT = []byte(os.Getenv("SECRET_KEY_JWT"))
+	var secretJWT = []byte(os.Getenv(utilities.KEY_JWT))
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 

@@ -1,5 +1,7 @@
 package utilities
 
+import "os"
+
 const (
 	// endpoints
 	CREATE_ACCOUNT  = "/create/account"
@@ -9,4 +11,8 @@ const (
 	LOGIN           = "/login"
 
 	GENERATE_UUID = "/generate/uuid"
+)
+
+var (
+	KEY_JWT = os.Getenv("SECRET_KEY_JWT")
 )
