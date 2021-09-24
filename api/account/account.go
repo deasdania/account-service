@@ -20,6 +20,7 @@ func (a Account) Account(r *gin.RouterGroup) {
 	r.GET(utilities.GET_ACCOUNT, a.GetUser)
 	r.POST(utilities.LOGIN, a.Login)
 	r.POST(utilities.CREATE_ACCOUNT, a.CreateAccount)
+	r.POST(utilities.CHANGE_PASSWORD, a.ChangePassword)
 
 	r.GET(utilities.GENERATE_UUID, a.GenerateUuid)
 	r.POST("/test", func(c *gin.Context) { return })
@@ -66,4 +67,21 @@ func (a Account) GenerateUuid(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"uuid": myuuid,
 	})
+}
+
+func (a Account) ChangePassword(c *gin.Context) {
+	email := c.PostForm("email")
+	old_password := c.PostForm("old_password")
+	new_password := c.PostForm("new_password")
+	confirm_password := c.PostForm("confirm_password")
+
+	form_change_pass := models.FormChangePassword{
+		Email:           email,
+		OldPassword:     old_password,
+		NewPassword:     new_password,
+		ConfirmPassword: confirm_password,
+	}
+	response := a.AccountUsecase.ChangePassword(form_change_pass)
+
+	c.JSON(response.Status, response)
 }

@@ -11,4 +11,5 @@ type IAccountUsecase interface {
 	CheckUserExist(email string) bool
 	CheckPasswordLever(ps string) []string
 	CreateUser(form_register models.FormRegister) *response.Response
+	ChangePassword(form_change_pass models.FormChangePassword) *response.Response
 }

@@ -46,7 +46,12 @@ func (a accountUsecase) GenerateJWT(user *models.Users) (string, error) {
 	claims := token.Claims.(jwt.MapClaims)
 
 	claims["authorized"] = true
-	claims["user"] = user
+	claims["user"] = map[string]string{
+		"id":    fmt.Sprintf("%d", user.Id),
+		"uuid":  user.Uuid,
+		"name":  user.Name,
+		"email": user.Email,
+	}
 	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
 	tokenString, err := token.SignedString(secretJWT)
 
@@ -101,6 +106,7 @@ func (a accountUsecase) CheckUserExist(email string) bool {
 	}
 	return true
 }
+
 func (a accountUsecase) CreateUser(form_register models.FormRegister) *response.Response {
 	fmt.Println(form_register)
 	exist := a.CheckUserExist(form_register.Email)
@@ -126,6 +132,40 @@ func (a accountUsecase) CreateUser(form_register models.FormRegister) *response.
 			return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
 		}
 		return a.responseStruct.ResponseError(200, []string{"Create User"}, user)
+	}
+}
+
+func (a accountUsecase) ChangePassword(form_change_pass models.FormChangePassword) *response.Response {
+	user, err := a.accountMysql.GetAccountByEmail(form_change_pass.Email)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	match := a.CheckPasswordHash(form_change_pass.OldPassword, user.Password)
+
+	if !match {
+		return a.responseStruct.ResponseError(400, []string{"password is not match"}, nil)
+	}
+	errCheck := a.CheckPasswordLever(form_change_pass.NewPassword)
+	if errCheck != nil {
+		return a.responseStruct.ResponseError(400, errCheck, nil)
+	}
+	if form_change_pass.NewPassword == form_change_pass.OldPassword {
+		return a.responseStruct.ResponseError(400, []string{"new password and couldn't be same with the old one"}, nil)
+	}
+	if form_change_pass.NewPassword != form_change_pass.ConfirmPassword {
+		return a.responseStruct.ResponseError(400, []string{"new password and confirm password not the same"}, nil)
+	} else {
+		hash, _ := a.HashPassword(form_change_pass.NewPassword)
+		errUpdate := a.accountMysql.UpdateAccountPassword(user.Email, hash)
+		if errUpdate != nil {
+			return a.responseStruct.ResponseError(400, []string{errUpdate.Error()}, nil)
+		}
+		return a.responseStruct.ResponseError(200, []string{"Password changed"}, map[string]string{
+			"id":    fmt.Sprintf("%d", user.Id),
+			"uuid":  user.Uuid,
+			"name":  user.Name,
+			"email": user.Email,
+		})
 	}
 }
 

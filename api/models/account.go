@@ -25,3 +25,10 @@ type FormRegister struct {
 	Password        string `json:"password"`
 	ConfirmPassword string `json:"confirm_password"`
 }
+
+type FormChangePassword struct {
+	Email           string `json:"email"`
+	OldPassword     string `json:"old_password"`
+	NewPassword     string `json:"new_password"`
+	ConfirmPassword string `json:"confirm_password"`
+}

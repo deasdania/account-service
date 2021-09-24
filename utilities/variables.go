@@ -9,6 +9,7 @@ const (
 	GET_ALL_ACCOUNT = "/users"
 	GET_ACCOUNT     = "/user"
 	LOGIN           = "/login"
+	CHANGE_PASSWORD = "/change/account/password"
 
 	GENERATE_UUID = "/generate/uuid"
 )

@@ -35,6 +35,13 @@ func (a accountMysql) GetAccountByEmail(email string) (*models.Users, error) {
 	return &user, nil
 }
 
+func (a accountMysql) UpdateAccountPassword(email string, hash string) error {
+	err := a.db.Debug().Table("users").Where("email = ?", email).Update("password", hash).Error
+	if err != nil {
+		return err
+	}
+	return err
+}
 func NewAccountMysql(db *gorm.DB) IAccountMysql {
 	return &accountMysql{db: db}
 }
