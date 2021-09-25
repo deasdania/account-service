@@ -131,7 +131,12 @@ func (a accountUsecase) CreateUser(form_register models.FormRegister) *response.
 		if err != nil {
 			return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
 		}
-		return a.responseStruct.ResponseError(200, []string{"Create User"}, user)
+		return a.responseStruct.ResponseError(200, []string{"Create User"}, map[string]string{
+			"id":    fmt.Sprintf("%d", user.Id),
+			"uuid":  user.Uuid,
+			"name":  user.Name,
+			"email": user.Email,
+		})
 	}
 }
 
@@ -150,7 +155,7 @@ func (a accountUsecase) ChangePassword(form_change_pass models.FormChangePasswor
 		return a.responseStruct.ResponseError(400, errCheck, nil)
 	}
 	if form_change_pass.NewPassword == form_change_pass.OldPassword {
-		return a.responseStruct.ResponseError(400, []string{"new password and couldn't be same with the old one"}, nil)
+		return a.responseStruct.ResponseError(400, []string{"new password and couldn't be same with the previous one"}, nil)
 	}
 	if form_change_pass.NewPassword != form_change_pass.ConfirmPassword {
 		return a.responseStruct.ResponseError(400, []string{"new password and confirm password not the same"}, nil)
