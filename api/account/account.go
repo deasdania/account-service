@@ -18,7 +18,7 @@ type Account struct {
 
 func (a Account) Account(r *gin.RouterGroup) {
 	r.GET(utilities.GET_ACCOUNT, a.GetUser)
-	r.POST(utilities.LOGIN, a.Login)
+	// r.POST(utilities.LOGIN, a.Login)
 	r.POST(utilities.CREATE_ACCOUNT, a.CreateAccount)
 	r.POST(utilities.CHANGE_PASSWORD, a.ChangePassword)
 

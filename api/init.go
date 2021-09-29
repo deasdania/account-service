@@ -4,6 +4,9 @@ import (
 	"account-metalit/api/account"
 	"account-metalit/api/account/repository"
 	"account-metalit/api/account/usecase"
+	"account-metalit/api/auth"
+	"account-metalit/api/auth/authjwt"
+	usecaseauth "account-metalit/api/auth/usecase"
 	"account-metalit/config"
 	"account-metalit/response"
 	"account-metalit/utilities"
@@ -15,17 +18,29 @@ import (
 func Init(r *gin.Engine) {
 
 	db := config.InitDb()
+	redisDb := config.InitDbRedis()
 
 	r.Use(utilities.CORSMiddleware())
-	v1 := r.Group("/api")
+	private := r.Group("/api")
+
+	public := r.Group("/api")
+
+	responseStruct := response.InitResponse()
 
 	//account
 	accountMysql := repository.NewAccountMysql(db)
-	responseStruct := response.InitResponse()
 	accountUsecase := usecase.NewAccountUsecase(accountMysql, responseStruct)
 	accountController := account.Account{AccountUsecase: accountUsecase}
-	accountController.Account(v1)
+	accountController.Account(private)
+	//AUTH
+	authService := authjwt.JWTAuthService(redisDb)
+	authUsecase := usecaseauth.NewAuthUsecase(authService, accountMysql)
+	authController := auth.Auth{AuthUsecase: authUsecase}
+	authController.Account(public)
 
+	private.Use(utilities.CheckRestClientJWT(authUsecase))
+
+	fmt.Println(utilities.ACCOUNT_PORT)
 	r.Run(fmt.Sprintf(":8089"))
 
 }

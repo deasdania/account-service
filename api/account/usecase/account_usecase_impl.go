@@ -91,9 +91,7 @@ func (a accountUsecase) CheckPasswordLever(ps string) []string {
 		errMessage = append(errMessage, "password need symbol")
 		isErr = true
 	}
-	// errAll := strings.Join(errMessage, ", ")
 	if isErr {
-		// return fmt.Errorf(errAll)
 		return errMessage
 	}
 	return nil
