@@ -41,9 +41,8 @@ func CheckRestClientJWT(authUsecase usecase.IAuthUsecase) gin.HandlerFunc {
 	fmt.Println("CheckRestClient")
 	return func(c *gin.Context) {
 		mekarClient := c.Request.Header.Get("Authorization")
-		mekarClient := c.Request.Header.Get("Metalit-Client")
 		if mekarClient != "" {
-			fmt.Println(mekarClient, "METALIT_CLIENT")
+			// fmt.Println(mekarClient, "METALIT_CLIENT")
 			var err error
 			try.This(func() {
 				metadata, errA := authUsecase.ExtractTokenMetadata(c.Request)

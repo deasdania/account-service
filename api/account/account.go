@@ -2,6 +2,8 @@ package account
 
 import (
 	"account-metalit/api/account/usecase"
+	authusecase "account-metalit/api/auth/usecase"
+
 	"account-metalit/api/models"
 	"account-metalit/utilities"
 	"fmt"
@@ -14,11 +16,11 @@ import (
 
 type Account struct {
 	AccountUsecase usecase.IAccountUsecase
+	AuthUsecase    authusecase.IAuthUsecase
 }
 
 func (a Account) Account(r *gin.RouterGroup) {
 	r.GET(utilities.GET_ACCOUNT, a.GetUser)
-	// r.POST(utilities.LOGIN, a.Login)
 	r.POST(utilities.CREATE_ACCOUNT, a.CreateAccount)
 	r.POST(utilities.CHANGE_PASSWORD, a.ChangePassword)
 
@@ -70,7 +72,11 @@ func (a Account) GenerateUuid(c *gin.Context) {
 }
 
 func (a Account) ChangePassword(c *gin.Context) {
-	email := c.PostForm("email")
+	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
+	if errA != nil {
+		fmt.Println(errA.Error())
+	}
+	email := metadata.Email
 	old_password := c.PostForm("old_password")
 	new_password := c.PostForm("new_password")
 	confirm_password := c.PostForm("confirm_password")

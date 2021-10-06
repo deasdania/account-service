@@ -26,19 +26,19 @@ func Init(r *gin.Engine) {
 	public := r.Group("/api")
 
 	responseStruct := response.InitResponse()
-
-	//account
 	accountMysql := repository.NewAccountMysql(db)
-	accountUsecase := usecase.NewAccountUsecase(accountMysql, responseStruct)
-	accountController := account.Account{AccountUsecase: accountUsecase}
-	accountController.Account(private)
+
 	//AUTH
 	authService := authjwt.JWTAuthService(redisDb)
 	authUsecase := usecaseauth.NewAuthUsecase(authService, accountMysql)
 	authController := auth.Auth{AuthUsecase: authUsecase}
 	authController.Account(public)
-
 	private.Use(utilities.CheckRestClientJWT(authUsecase))
+
+	//account
+	accountUsecase := usecase.NewAccountUsecase(accountMysql, responseStruct)
+	accountController := account.Account{AccountUsecase: accountUsecase, AuthUsecase: authUsecase}
+	accountController.Account(private)
 
 	fmt.Println(utilities.ACCOUNT_PORT)
 	r.Run(fmt.Sprintf(":8089"))

@@ -13,9 +13,9 @@ type Auth struct {
 }
 
 func (a Auth) Account(r *gin.RouterGroup) {
-	r.POST(utilities.LOGIN, a.Login)
-	r.POST(utilities.LOGOUT, a.Logout)
-	r.POST(utilities.REFRESH, a.Refresh)
+	r.POST(utilities.LOGIN, a.Login)     // public
+	r.POST(utilities.LOGOUT, a.Logout)   // private
+	r.POST(utilities.REFRESH, a.Refresh) // public
 }
 
 func (a Auth) Login(context *gin.Context) {
