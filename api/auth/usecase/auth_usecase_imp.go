@@ -4,6 +4,7 @@ import (
 	"account-metalit/api/account/repository"
 	"account-metalit/api/auth/authjwt"
 	"account-metalit/api/models"
+	"account-metalit/response"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,8 +17,9 @@ import (
 )
 
 type authUsecase struct {
-	jWtService   authjwt.JWTService
-	accountMysql repository.IAccountMysql
+	jWtService     authjwt.JWTService
+	accountMysql   repository.IAccountMysql
+	responseStruct response.IResponse
 }
 
 func (a authUsecase) Refresh(refreshToken string) (*models.AuthReq, int, error) {

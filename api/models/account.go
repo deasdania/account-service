@@ -4,13 +4,29 @@ import "time"
 
 // Users
 type Users struct {
-	Id          uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
-	Uuid        string    `json:"uuid" gorm:"unique;not null"`
-	Name        string    `json:"name" gorm:"not null;size:150"`
-	Email       string    `json:"email" gorm:"unique;not null;size:75"`
+	Id    uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
+	Uuid  string `json:"uuid" gorm:"unique;not null"`
+	Name  string `json:"name" gorm:"not null;size:150"`
+	Email string `json:"email" gorm:"unique;not null;size:75"`
+	// RoleID      uint64    `gorm:"default:2"`
+	// Role        Roles     `gorm:"foreignKey:RoleID"`
 	Password    string    `json:"password" gorm:"not null;size:70"`
 	CreatedDate time.Time `json:"created_date" gorm:"not null;default:CURRENT_TIMESTAMP;"`
 	UpdateDate  time.Time `json:"update_date" gorm:"not null;default:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;"`
+	// Roles       []Roles       `gorm:"many2many:roles;"`
+	// Permissions []Permissions `gorm:"many2many:permissions;"`
+}
+
+type UserPermission struct {
+	Id           uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
+	UserID       uint64 `json:"user_id"`
+	PermissionID uint64 `json:"permission_id"`
+}
+
+type UserRole struct {
+	Id     uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
+	UserId uint64 `json:"user_id" gorm:"not null`
+	RoleId uint64 `json:"role_id" gorm:"not null`
 }
 
 // func (u *Users) BeforeCreate() (err error) {

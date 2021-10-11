@@ -13,28 +13,29 @@ type Auth struct {
 }
 
 func (a Auth) Account(r *gin.RouterGroup) {
-	r.POST(utilities.LOGIN, a.Login)     // public
-	r.POST(utilities.LOGOUT, a.Logout)   // private
-	r.POST(utilities.REFRESH, a.Refresh) // public
+	r.POST(utilities.CHECK_AUTH, a.CheckAuth) // private
+	r.POST(utilities.LOGIN, a.Login)          // public
+	r.POST(utilities.LOGOUT, a.Logout)        // private
+	r.POST(utilities.REFRESH, a.Refresh)      // public
+}
+
+func (a Auth) CheckAuth(context *gin.Context) {
+	err := a.AuthUsecase.TokenValid(context.Request)
+	if err != nil {
+		context.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Not Valid Token",
+		})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{
+		"message": "Valid Token",
+	})
 }
 
 func (a Auth) Login(context *gin.Context) {
 	email := context.PostForm("email")
 	password := context.PostForm("password")
 
-	// token := a.AccountUsecase.GetToken(email, password)
-
-	// context.JSON(http.StatusOK, gin.H{
-	// 	"token": token,
-	// })
-	// var authReq models.Auth
-	// err := context.ShouldBind(&authReq)
-	// if err != nil {
-	// 	context.JSON(http.StatusBadRequest, gin.H{
-	// 		"error": err.Error(),
-	// 	})
-	// 	return
-	// }
 	token, status, err := a.AuthUsecase.Login(email, password)
 	if err != nil {
 		context.JSON(status, gin.H{

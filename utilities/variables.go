@@ -13,9 +13,10 @@ const (
 
 	GENERATE_UUID = "/generate/uuid"
 
-	LOGIN   = "/login"
-	LOGOUT  = "/logout"
-	REFRESH = "/refresh"
+	LOGIN      = "/login"
+	CHECK_AUTH = "/check/authorize"
+	LOGOUT     = "/logout"
+	REFRESH    = "/refresh"
 )
 
 var (

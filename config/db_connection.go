@@ -24,5 +24,16 @@ func InitDb() *gorm.DB {
 		return nil
 	}
 	db.AutoMigrate(&models.Users{})
+	db.AutoMigrate(&models.Roles{})
+	db.AutoMigrate(&models.UserRole{})
+	db.AutoMigrate(&models.Permissions{})
+	db.AutoMigrate(&models.ContentTypes{})
+	db.AutoMigrate(&models.RolePermission{})
+	db.Model(&models.Permissions{}).AddForeignKey("content_type_id", "content_types(id)", "RESTRICT", "RESTRICT")
+	db.Model(&models.RolePermission{}).AddForeignKey("role_id", "roles(id)", "RESTRICT", "RESTRICT")
+	db.Model(&models.RolePermission{}).AddForeignKey("permission_id", "permissions(id)", "RESTRICT", "RESTRICT")
+	// db.Model(&models.UserRole{}).AddForeignKey("role_id,permission_id", "roles(id), permissions(id)", "RESTRICT", "RESTRICT")
+	// db.Model(&models.UserPermission{}).AddForeignKey("user_id,permission_id", "users(id), permissions(id)", "RESTRICT", "RESTRICT")
+
 	return db
 }
