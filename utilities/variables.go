@@ -4,10 +4,11 @@ import "os"
 
 const (
 	// endpoints
-	CREATE_ACCOUNT  = "/create/account"
-	TEST            = "/test"
-	GET_ALL_ACCOUNT = "/users"
-	GET_ACCOUNT     = "/user"
+	CREATE_ACCOUNT        = "/create/account"
+	CREATE_ACCOUNT_PUBLIC = "/createaccount"
+	TEST                  = "/test"
+	GET_ALL_ACCOUNT       = "/users"
+	GET_ACCOUNT           = "/user"
 	// LOGIN           = "/login"
 	CHANGE_PASSWORD = "/change/account/password"
 

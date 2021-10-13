@@ -1,6 +1,7 @@
 package auth
 
 import (
+	accountusecase "account-metalit/api/account/usecase"
 	"account-metalit/api/auth/usecase"
 	"account-metalit/api/models"
 	"account-metalit/utilities"
@@ -9,14 +10,16 @@ import (
 )
 
 type Auth struct {
-	AuthUsecase usecase.IAuthUsecase
+	AccountUsecase accountusecase.IAccountUsecase
+	AuthUsecase    usecase.IAuthUsecase
 }
 
 func (a Auth) Account(r *gin.RouterGroup) {
-	r.POST(utilities.CHECK_AUTH, a.CheckAuth) // private
-	r.POST(utilities.LOGIN, a.Login)          // public
-	r.POST(utilities.LOGOUT, a.Logout)        // private
-	r.POST(utilities.REFRESH, a.Refresh)      // public
+	r.POST(utilities.CHECK_AUTH, a.CheckAuth)                // private
+	r.POST(utilities.LOGIN, a.Login)                         // public
+	r.POST(utilities.LOGOUT, a.Logout)                       // private
+	r.POST(utilities.REFRESH, a.Refresh)                     // public
+	r.POST(utilities.CREATE_ACCOUNT_PUBLIC, a.CreateAccount) // public
 }
 
 func (a Auth) CheckAuth(context *gin.Context) {
@@ -32,6 +35,21 @@ func (a Auth) CheckAuth(context *gin.Context) {
 	})
 }
 
+func (a Auth) CreateAccount(c *gin.Context) {
+	name := c.PostForm("name")
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+	confirm_password := c.PostForm("confirm_password")
+
+	form_register := models.FormRegister{
+		Name:            name,
+		Email:           email,
+		Password:        password,
+		ConfirmPassword: confirm_password,
+	}
+	response := a.AccountUsecase.CreateUser(form_register)
+	c.JSON(response.Status, response)
+}
 func (a Auth) Login(context *gin.Context) {
 	email := context.PostForm("email")
 	password := context.PostForm("password")

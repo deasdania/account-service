@@ -34,16 +34,16 @@ func (a Account) GetUser(c *gin.Context) {
 	c.JSON(user.Status, user)
 }
 
-func (a Account) Login(c *gin.Context) {
-	email := c.PostForm("email")
-	password := c.PostForm("password")
+// func (a Account) Login(c *gin.Context) {
+// 	email := c.PostForm("email")
+// 	password := c.PostForm("password")
 
-	token := a.AccountUsecase.GetToken(email, password)
+// 	token := a.AccountUsecase.GetToken(email, password)
 
-	c.JSON(http.StatusOK, gin.H{
-		"token": token,
-	})
-}
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"token": token,
+// 	})
+// }
 
 func (a Account) CreateAccount(c *gin.Context) {
 	name := c.PostForm("name")

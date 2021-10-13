@@ -172,24 +172,24 @@ func (a accountUsecase) ChangePassword(form_change_pass models.FormChangePasswor
 	}
 }
 
-func (a accountUsecase) GetToken(email string, password string) (token string) {
-	user, err := a.accountMysql.GetAccountByEmail(email)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	match := a.CheckPasswordHash(password, user.Password)
+// func (a accountUsecase) GetToken(email string, password string) (token string) {
+// 	user, err := a.accountMysql.GetAccountByEmail(email)
+// 	if err != nil {
+// 		fmt.Println(err.Error())
+// 	}
+// 	match := a.CheckPasswordHash(password, user.Password)
 
-	tok := ""
-	if match {
-		tok, err = a.GenerateJWT(user)
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-	} else {
-		tok = ""
-	}
-	return tok
-}
+// 	tok := ""
+// 	if match {
+// 		tok, err = a.GenerateJWT(user)
+// 		if err != nil {
+// 			fmt.Println(err.Error())
+// 		}
+// 	} else {
+// 		tok = ""
+// 	}
+// 	return tok
+// }
 
 func NewAccountUsecase(accountMysql repository.IAccountMysql, responseStruct response.IResponse) IAccountUsecase {
 	return &accountUsecase{accountMysql: accountMysql, responseStruct: responseStruct}
