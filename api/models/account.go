@@ -3,18 +3,14 @@ package models
 import "time"
 
 // Users
-type Users struct {
-	Id    uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
-	Uuid  string `json:"uuid" gorm:"unique;not null"`
-	Name  string `json:"name" gorm:"not null;size:150"`
-	Email string `json:"email" gorm:"unique;not null;size:75"`
-	// RoleID      uint64    `gorm:"default:2"`
-	// Role        Roles     `gorm:"foreignKey:RoleID"`
+type User struct {
+	Id          uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
+	Uuid        string    `json:"uuid" gorm:"unique;not null"`
+	Name        string    `json:"name" gorm:"not null;size:150"`
+	Email       string    `json:"email" gorm:"unique;not null;size:75"`
 	Password    string    `json:"password" gorm:"not null;size:70"`
 	CreatedDate time.Time `json:"created_date" gorm:"not null;default:CURRENT_TIMESTAMP;"`
 	UpdateDate  time.Time `json:"update_date" gorm:"not null;default:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;"`
-	// Roles       []Roles       `gorm:"many2many:roles;"`
-	// Permissions []Permissions `gorm:"many2many:permissions;"`
 }
 
 type UserPermission struct {

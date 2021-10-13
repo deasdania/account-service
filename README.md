@@ -6,7 +6,7 @@ go mod tidy
 ```
 
 ## Create DB
-Create db with file struct_accountSvc.sql on the project root
+Database will generate after project run
 
 ## Environment Variable
 Fill the empty string with yours
@@ -33,4 +33,5 @@ Go to directory where the test file exist, and run on terminal:
 ```bash
 go test
 ```
+![Alt text](docs/TableRelations.png?raw=true "Tabel Relations")
 

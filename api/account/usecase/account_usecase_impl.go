@@ -40,7 +40,7 @@ func (a accountUsecase) CheckPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-func (a accountUsecase) GenerateJWT(user *models.Users) (string, error) {
+func (a accountUsecase) GenerateJWT(user *models.User) (string, error) {
 	var secretJWT = []byte(os.Getenv(utilities.KEY_JWT))
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
@@ -119,7 +119,7 @@ func (a accountUsecase) CreateUser(form_register models.FormRegister) *response.
 		return a.responseStruct.ResponseError(400, []string{"password and confirm password not same"}, nil)
 	} else {
 		hash, _ := a.HashPassword(form_register.Password)
-		user := models.Users{
+		user := models.User{
 			Name:     form_register.Name,
 			Uuid:     uuid.New().String(),
 			Email:    form_register.Email,

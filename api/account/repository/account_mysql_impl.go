@@ -9,8 +9,8 @@ type accountMysql struct {
 	db *gorm.DB
 }
 
-func (a accountMysql) GetAccountById(id string) (*models.Users, error) {
-	var user models.Users
+func (a accountMysql) GetAccountById(id string) (*models.User, error) {
+	var user models.User
 	err := a.db.Debug().Table("users").First(&user, "id = ?", id)
 	if err.Error != nil {
 		return nil, err.Error
@@ -18,7 +18,7 @@ func (a accountMysql) GetAccountById(id string) (*models.Users, error) {
 	return &user, nil
 }
 
-func (a accountMysql) CreateAccount(user *models.Users) error {
+func (a accountMysql) CreateAccount(user *models.User) error {
 	result := a.db.Debug().Table("users").Create(&user)
 	if result.RowsAffected == 0 {
 		return result.Error
@@ -26,8 +26,8 @@ func (a accountMysql) CreateAccount(user *models.Users) error {
 	return result.Error
 }
 
-func (a accountMysql) GetAccountByEmail(email string) (*models.Users, error) {
-	var user models.Users
+func (a accountMysql) GetAccountByEmail(email string) (*models.User, error) {
+	var user models.User
 	err := a.db.Debug().Table("users").First(&user, "email = ?", email)
 	if err.Error != nil {
 		return nil, err.Error
