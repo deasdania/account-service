@@ -18,6 +18,9 @@ const (
 	CHECK_AUTH = "/check/authorize"
 	LOGOUT     = "/logout"
 	REFRESH    = "/refresh"
+
+	GET_ROLE    = "/role"
+	CREATE_ROLE = "/create/role"
 )
 
 var (

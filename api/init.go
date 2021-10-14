@@ -7,6 +7,9 @@ import (
 	"account-metalit/api/auth"
 	"account-metalit/api/auth/authjwt"
 	usecaseauth "account-metalit/api/auth/usecase"
+	"account-metalit/api/role"
+	reporole "account-metalit/api/role/repository"
+	usecaserole "account-metalit/api/role/usecase"
 	"account-metalit/config"
 	"account-metalit/response"
 	"account-metalit/utilities"
@@ -27,7 +30,10 @@ func Init(r *gin.Engine) {
 
 	responseStruct := response.InitResponse()
 	accountMysql := repository.NewAccountMysql(db)
+	roleMysql := reporole.NewroleMysql(db)
+
 	accountUsecase := usecase.NewAccountUsecase(accountMysql, responseStruct)
+	roleUsecase := usecaserole.NewRoleUsecase(roleMysql, responseStruct)
 
 	//AUTH
 	authService := authjwt.JWTAuthService(redisDb)
@@ -39,6 +45,10 @@ func Init(r *gin.Engine) {
 	//account
 	accountController := account.Account{AccountUsecase: accountUsecase, AuthUsecase: authUsecase}
 	accountController.Account(private)
+
+	//role
+	roleController := role.Role{RoleUsecase: roleUsecase, AuthUsecase: authUsecase}
+	roleController.Role(private)
 
 	fmt.Println(utilities.ACCOUNT_PORT)
 	r.Run(fmt.Sprintf(":8089"))

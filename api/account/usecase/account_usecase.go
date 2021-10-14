@@ -7,7 +7,6 @@ import (
 
 type IAccountUsecase interface {
 	GetUser(id string) *response.Response
-	// GetToken(email string, password string) (token string)
 	CheckUserExist(email string) bool
 	CheckPasswordLever(ps string) []string
 	CreateUser(form_register models.FormRegister) *response.Response

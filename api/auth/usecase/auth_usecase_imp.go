@@ -150,7 +150,7 @@ func (a authUsecase) Login(email string, password string) (*models.AuthReq, int,
 	// }
 	user, err := a.accountMysql.GetAccountByEmail(email)
 	if err != nil {
-		fmt.Println(err.Error())
+		return nil, http.StatusUnprocessableEntity, err
 	}
 	match := a.CheckPasswordHash(password, user.Password)
 

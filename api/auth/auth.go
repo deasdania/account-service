@@ -61,7 +61,15 @@ func (a Auth) Login(context *gin.Context) {
 		})
 		return
 	}
-	context.JSON(status, token)
+	if token != nil {
+		context.JSON(status, token)
+		return
+	} else {
+		context.JSON(status, gin.H{
+			"error": "password not match",
+		})
+		return
+	}
 }
 
 func (a Auth) Logout(context *gin.Context) {

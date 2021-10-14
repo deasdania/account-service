@@ -15,3 +15,7 @@ type RolePermission struct {
 	RoleID       uint64 `json:"role_id"`
 	PermissionID uint64 `json:"permission_id"`
 }
+
+type FormName struct {
+	Name string
+}

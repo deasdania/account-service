@@ -8,7 +8,6 @@ import (
 	"account-metalit/utilities"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	// "github.com/satori/go.uuid"
 	"github.com/google/uuid"
 	"net/http"
 	"reflect"
@@ -34,17 +33,6 @@ func (a Account) GetUser(c *gin.Context) {
 	c.JSON(user.Status, user)
 }
 
-// func (a Account) Login(c *gin.Context) {
-// 	email := c.PostForm("email")
-// 	password := c.PostForm("password")
-
-// 	token := a.AccountUsecase.GetToken(email, password)
-
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"token": token,
-// 	})
-// }
-
 func (a Account) CreateAccount(c *gin.Context) {
 	name := c.PostForm("name")
 	email := c.PostForm("email")
@@ -57,7 +45,6 @@ func (a Account) CreateAccount(c *gin.Context) {
 		Password:        password,
 		ConfirmPassword: confirm_password,
 	}
-	// fmt.Println(form_register)
 	response := a.AccountUsecase.CreateUser(form_register)
 
 	c.JSON(response.Status, response)
