@@ -32,8 +32,8 @@ func Init(r *gin.Engine) {
 	accountMysql := repository.NewAccountMysql(db)
 	roleMysql := reporole.NewroleMysql(db)
 
-	accountUsecase := usecase.NewAccountUsecase(accountMysql, responseStruct)
 	roleUsecase := usecaserole.NewRoleUsecase(roleMysql, responseStruct)
+	accountUsecase := usecase.NewAccountUsecase(roleMysql, accountMysql, responseStruct)
 
 	//AUTH
 	authService := authjwt.JWTAuthService(redisDb)

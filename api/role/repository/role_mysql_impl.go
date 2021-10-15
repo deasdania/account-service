@@ -11,6 +11,15 @@ type roleMysql struct {
 	db *gorm.DB
 }
 
+func (a roleMysql) GetRoleByName(name string) (*models.Role, error) {
+	var role models.Role
+	err := a.db.Debug().Table("roles").First(&role, "name = ?", name)
+	if err.Error != nil {
+		return nil, err.Error
+	}
+	return &role, nil
+}
+
 func (a roleMysql) GetRoleById(id string) (*models.Role, error) {
 	var role models.Role
 	err := a.db.Debug().Table("roles").First(&role, "id = ?", id)

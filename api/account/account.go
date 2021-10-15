@@ -38,6 +38,7 @@ func (a Account) CreateAccount(c *gin.Context) {
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 	confirm_password := c.PostForm("confirm_password")
+	// role := c.PostForm("roles")
 
 	form_register := models.FormRegister{
 		Name:            name,
@@ -45,10 +46,8 @@ func (a Account) CreateAccount(c *gin.Context) {
 		Password:        password,
 		ConfirmPassword: confirm_password,
 	}
-	response := a.AccountUsecase.CreateUser(form_register)
-
+	response := a.AccountUsecase.CreateUser(form_register, utilities.ADMIN)
 	c.JSON(response.Status, response)
-
 }
 
 func (a Account) GenerateUuid(c *gin.Context) {

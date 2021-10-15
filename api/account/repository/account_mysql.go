@@ -7,4 +7,5 @@ type IAccountMysql interface {
 	GetAccountByEmail(email string) (*models.User, error)
 	CreateAccount(user *models.User) error
 	UpdateAccountPassword(email string, hash string) error
+	CreateUserRole(user *models.User, role *models.Role) error
 }

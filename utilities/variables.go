@@ -21,6 +21,9 @@ const (
 
 	GET_ROLE    = "/role"
 	CREATE_ROLE = "/create/role"
+
+	MEMBER = "member"
+	ADMIN  = "admin"
 )
 
 var (

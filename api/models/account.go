@@ -25,6 +25,11 @@ type UserRole struct {
 	RoleId uint64 `json:"role_id" gorm:"not null`
 }
 
+type FormUserRole struct {
+	UserId uint64
+	RoleId uint64
+}
+
 // func (u *Users) BeforeCreate() (err error) {
 // 	u.CreatedDate = time.Now()
 // 	u.UpdateDate = time.Now()

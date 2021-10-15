@@ -3,6 +3,7 @@ package usecase
 import (
 	"account-metalit/api/account/repository"
 	"account-metalit/api/models"
+	rolerepo "account-metalit/api/role/repository"
 	"account-metalit/response"
 	"account-metalit/utilities"
 	"fmt"
@@ -16,6 +17,7 @@ import (
 )
 
 type accountUsecase struct {
+	roleMysql      rolerepo.IRoleMysql
 	accountMysql   repository.IAccountMysql
 	responseStruct response.IResponse
 }
@@ -105,7 +107,7 @@ func (a accountUsecase) CheckUserExist(email string) bool {
 	return true
 }
 
-func (a accountUsecase) CreateUser(form_register models.FormRegister) *response.Response {
+func (a accountUsecase) CreateUser(form_register models.FormRegister, member_type string) *response.Response {
 	fmt.Println(form_register)
 	exist := a.CheckUserExist(form_register.Email)
 	if exist {
@@ -128,6 +130,20 @@ func (a accountUsecase) CreateUser(form_register models.FormRegister) *response.
 		err := a.accountMysql.CreateAccount(&user)
 		if err != nil {
 			return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+		}
+		usercreated, errs := a.accountMysql.GetAccountByEmail(form_register.Email)
+		if errs != nil {
+			fmt.Println(errs.Error())
+		}
+		if member_type == utilities.MEMBER {
+			role, errGetrole := a.roleMysql.GetRoleByName(member_type)
+			if errGetrole != nil {
+				return a.responseStruct.ResponseError(400, []string{errGetrole.Error()}, nil)
+			}
+			err = a.accountMysql.CreateUserRole(usercreated, role)
+			if err != nil {
+				return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+			}
 		}
 		return a.responseStruct.ResponseError(200, []string{"Create User"}, map[string]string{
 			"id":    fmt.Sprintf("%d", user.Id),
@@ -172,6 +188,6 @@ func (a accountUsecase) ChangePassword(form_change_pass models.FormChangePasswor
 	}
 }
 
-func NewAccountUsecase(accountMysql repository.IAccountMysql, responseStruct response.IResponse) IAccountUsecase {
-	return &accountUsecase{accountMysql: accountMysql, responseStruct: responseStruct}
+func NewAccountUsecase(roleMysql rolerepo.IRoleMysql, accountMysql repository.IAccountMysql, responseStruct response.IResponse) IAccountUsecase {
+	return &accountUsecase{roleMysql: roleMysql, accountMysql: accountMysql, responseStruct: responseStruct}
 }

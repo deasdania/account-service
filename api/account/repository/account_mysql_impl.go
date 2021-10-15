@@ -11,7 +11,7 @@ type accountMysql struct {
 
 func (a accountMysql) GetAccountById(id string) (*models.User, error) {
 	var user models.User
-	err := a.db.Debug().Table("users").First(&user, "id = ?", id)
+	err := a.db.Debug().Model(&models.User{}).First(&user, "id = ?", id)
 	if err.Error != nil {
 		return nil, err.Error
 	}
@@ -19,16 +19,20 @@ func (a accountMysql) GetAccountById(id string) (*models.User, error) {
 }
 
 func (a accountMysql) CreateAccount(user *models.User) error {
-	result := a.db.Debug().Table("users").Create(&user)
-	if result.RowsAffected == 0 {
-		return result.Error
+	return a.db.Debug().Model(&models.User{}).Create(&user).Error
+}
+
+func (a accountMysql) CreateUserRole(user *models.User, role *models.Role) error {
+	formUserRole := models.FormUserRole{
+		UserId: user.Id,
+		RoleId: role.Id,
 	}
-	return result.Error
+	return a.db.Debug().Model(&models.UserRole{}).Create(formUserRole).Error
 }
 
 func (a accountMysql) GetAccountByEmail(email string) (*models.User, error) {
 	var user models.User
-	err := a.db.Debug().Table("users").First(&user, "email = ?", email)
+	err := a.db.Debug().Model(&models.User{}).First(&user, "email = ?", email)
 	if err.Error != nil {
 		return nil, err.Error
 	}
@@ -36,11 +40,7 @@ func (a accountMysql) GetAccountByEmail(email string) (*models.User, error) {
 }
 
 func (a accountMysql) UpdateAccountPassword(email string, hash string) error {
-	err := a.db.Debug().Table("users").Where("email = ?", email).Update("password", hash).Error
-	if err != nil {
-		return err
-	}
-	return err
+	return a.db.Debug().Model(&models.User{}).Where("email = ?", email).Update("password", hash).Error
 }
 func NewAccountMysql(db *gorm.DB) IAccountMysql {
 	return &accountMysql{db: db}
