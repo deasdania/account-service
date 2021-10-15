@@ -34,20 +34,32 @@ func (a Account) GetUser(c *gin.Context) {
 }
 
 func (a Account) CreateAccount(c *gin.Context) {
-	name := c.PostForm("name")
-	email := c.PostForm("email")
-	password := c.PostForm("password")
-	confirm_password := c.PostForm("confirm_password")
-	// role := c.PostForm("roles")
-
-	form_register := models.FormRegister{
-		Name:            name,
-		Email:           email,
-		Password:        password,
-		ConfirmPassword: confirm_password,
+	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
+	if errA != nil {
+		fmt.Println(errA.Error())
 	}
-	response := a.AccountUsecase.CreateUser(form_register, utilities.ADMIN)
-	c.JSON(response.Status, response)
+	fmt.Println(metadata)
+	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
+	if isAdmin {
+		name := c.PostForm("name")
+		email := c.PostForm("email")
+		password := c.PostForm("password")
+		confirm_password := c.PostForm("confirm_password")
+		// role := c.PostForm("roles")
+
+		form_register := models.FormRegister{
+			Name:            name,
+			Email:           email,
+			Password:        password,
+			ConfirmPassword: confirm_password,
+		}
+		response := a.AccountUsecase.CreateUser(form_register, utilities.ADMIN)
+		c.JSON(response.Status, response)
+		return
+	}
+	c.JSON(http.StatusBadRequest, gin.H{
+		"message": "you are not allowed",
+	})
 }
 
 func (a Account) GenerateUuid(c *gin.Context) {

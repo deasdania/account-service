@@ -23,11 +23,11 @@ func (a accountMysql) CreateAccount(user *models.User) error {
 }
 
 func (a accountMysql) CreateUserRole(user *models.User, role *models.Role) error {
-	formUserRole := models.FormUserRole{
+	formUserRole := models.UserRole{
 		UserId: user.Id,
 		RoleId: role.Id,
 	}
-	return a.db.Debug().Model(&models.UserRole{}).Create(formUserRole).Error
+	return a.db.Debug().Model(&models.UserRole{}).Create(&formUserRole).Error
 }
 
 func (a accountMysql) GetAccountByEmail(email string) (*models.User, error) {

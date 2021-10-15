@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"os"
 	"regexp"
-	// "strings"
+	"strconv"
 	"time"
 )
 
@@ -105,6 +105,15 @@ func (a accountUsecase) CheckUserExist(email string) bool {
 		return false
 	}
 	return true
+}
+
+func (a accountUsecase) CheckUserIsAdmin(email string) bool {
+	user, _ := a.accountMysql.GetAccountByEmail(email)
+	isAdmin, err := a.roleMysql.CheckUserIsAdmin(strconv.Itoa(user.Id))
+	if err != nil {
+		return false
+	}
+	return isAdmin
 }
 
 func (a accountUsecase) CreateUser(form_register models.FormRegister, member_type string) *response.Response {

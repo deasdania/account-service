@@ -47,7 +47,7 @@ func Init(r *gin.Engine) {
 	accountController.Account(private)
 
 	//role
-	roleController := role.Role{RoleUsecase: roleUsecase, AuthUsecase: authUsecase}
+	roleController := role.Role{RoleUsecase: roleUsecase, AuthUsecase: authUsecase, AccountUsecase: accountUsecase}
 	roleController.Role(private)
 
 	fmt.Println(utilities.ACCOUNT_PORT)

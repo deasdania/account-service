@@ -9,4 +9,6 @@ type IRoleMysql interface {
 	CreateRole(name *models.FormName) error
 	UpdateRoleName(id string, name string) error
 	DeleteRoleById(id string) error
+	GetRoleByUserId(id string) (*models.Role, error)
+	CheckUserIsAdmin(user_id string) (bool, error)
 }

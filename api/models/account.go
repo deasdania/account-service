@@ -4,7 +4,7 @@ import "time"
 
 // Users
 type User struct {
-	Id          uint64    `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
+	Id          int       `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
 	Uuid        string    `json:"uuid" gorm:"unique;not null"`
 	Name        string    `json:"name" gorm:"not null;size:150"`
 	Email       string    `json:"email" gorm:"unique;not null;size:75"`
@@ -14,20 +14,20 @@ type User struct {
 }
 
 type UserPermission struct {
-	Id           uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
-	UserID       uint64 `json:"user_id"`
-	PermissionID uint64 `json:"permission_id"`
+	Id           int `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
+	UserID       int `json:"user_id"`
+	PermissionID int `json:"permission_id"`
 }
 
 type UserRole struct {
-	Id     uint64 `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
-	UserId uint64 `json:"user_id" gorm:"not null`
-	RoleId uint64 `json:"role_id" gorm:"not null`
+	Id     int `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
+	UserId int `json:"user_id" gorm:"not null`
+	RoleId int `json:"role_id" gorm:"not null`
 }
 
 type FormUserRole struct {
-	UserId uint64
-	RoleId uint64
+	UserId int
+	RoleId int
 }
 
 // func (u *Users) BeforeCreate() (err error) {

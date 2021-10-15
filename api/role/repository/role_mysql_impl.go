@@ -29,6 +29,24 @@ func (a roleMysql) GetRoleById(id string) (*models.Role, error) {
 	return &role, nil
 }
 
+func (a roleMysql) GetRoleByUserId(id string) (*models.Role, error) {
+	var role models.Role
+	err := a.db.Debug().Table("roles").First(&role, "user_id = ?", id)
+	if err.Error != nil {
+		return nil, err.Error
+	}
+	return &role, nil
+}
+
+func (a roleMysql) CheckUserIsAdmin(user_id string) (bool, error) {
+	var role models.Role
+	err := a.db.Debug().Table("user_roles").First(&role, "user_id = ? AND role_id = 1", user_id)
+	if err.Error != nil {
+		return false, err.Error
+	}
+	return true, nil
+}
+
 func (a roleMysql) GetAllRole(orderby string) ([]*models.Role, error) {
 	roles := make([]*models.Role, 0)
 	fmt.Println("orderby")
