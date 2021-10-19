@@ -2,16 +2,21 @@ package main
 
 import (
 	"account-metalit/api"
+	"account-metalit/docs"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
 )
 
-// func main() {
-// 	db := config.InitDb()
-// 	defer db.Close()
-// }
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @termsOfService http://swagger.io/terms/
 
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == "local" {
@@ -21,6 +26,13 @@ func main() {
 		}
 	}
 	r := gin.Default()
+
+	// programmatically set swagger info
+	docs.SwaggerInfo.Title = "Swagger Toko Bunga API"
+	docs.SwaggerInfo.Description = "This is a Final Project of Camp"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = os.Getenv("PORT_RUN")
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	api.Init(r)
 }

@@ -15,7 +15,10 @@ import (
 	"account-metalit/utilities"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	// "os"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"net/http"
+	"os"
 )
 
 func Init(r *gin.Engine) {
@@ -27,6 +30,12 @@ func Init(r *gin.Engine) {
 	private := r.Group("/api")
 
 	public := r.Group("/api")
+
+	ra := r.Group("/")
+	ra.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	ra.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusFound, "/swagger/index.html")
+	})
 
 	responseStruct := response.InitResponse()
 	accountMysql := repository.NewAccountMysql(db)
@@ -51,6 +60,6 @@ func Init(r *gin.Engine) {
 	roleController.Role(private)
 
 	fmt.Println(utilities.ACCOUNT_PORT)
-	r.Run(fmt.Sprintf(":8089"))
+	r.Run(os.Getenv("PORT_RUN"))
 
 }

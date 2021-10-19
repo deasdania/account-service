@@ -33,10 +33,20 @@ func (a Account) GetUser(c *gin.Context) {
 	c.JSON(user.Status, user)
 }
 
+// Create Account by Admin godoc
+// @Summary Admin can create another user using this API
+// @Description Register new user API
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Param Body formData models.BodyCreateAccount true "the body to create a user"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/create/account [post]
 func (a Account) CreateAccount(c *gin.Context) {
 	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
 	if errA != nil {
 		fmt.Println(errA.Error())
+		return
 	}
 	fmt.Println(metadata)
 	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
@@ -62,17 +72,40 @@ func (a Account) CreateAccount(c *gin.Context) {
 	})
 }
 
+// Generate uuid godoc
+// @Summary Generate new uuid with this API
+// @Description Generate uuid
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/generate/uuid [post]
 func (a Account) GenerateUuid(c *gin.Context) {
+	_, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
+	if errA != nil {
+		fmt.Println(errA.Error())
+		return
+	}
 	myuuid := uuid.New().String()
 	c.JSON(http.StatusOK, gin.H{
 		"uuid": myuuid,
 	})
 }
 
+// Change Password godoc
+// @Summary Change user password
+// @Description Change account password the logged on user with this API
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Param Body formData models.BodyChangePasswordAccount true "the body to create a user"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /change/account/password [post]
 func (a Account) ChangePassword(c *gin.Context) {
 	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
 	if errA != nil {
 		fmt.Println(errA.Error())
+		return
 	}
 	email := metadata.Email
 	old_password := c.PostForm("old_password")

@@ -6,16 +6,16 @@ import (
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
-	"log"
 	"os"
 
 	"time"
 )
 
 func Load(db *gorm.DB) {
+	fmt.Println("open seed")
 	err := db.Debug().AutoMigrate(&models.User{}, &models.UserRole{}, &models.UserPermission{}, &models.Role{}, &models.UserRole{}, &models.Permission{}, &models.ContentType{}, &models.RolePermission{}).Error
 	if err != nil {
-		log.Fatalf("cannot migrate table: %v", err)
+		fmt.Println("cannot migrate table: %v", err)
 	} else {
 		db.Model(&models.Permission{}).AddForeignKey("content_type_id", "content_types(id)", "RESTRICT", "RESTRICT")
 		db.Model(&models.RolePermission{}).AddForeignKey("role_id", "roles(id)", "RESTRICT", "RESTRICT")

@@ -22,6 +22,14 @@ func (a Auth) Account(r *gin.RouterGroup) {
 	r.POST(utilities.CREATE_ACCOUNT_PUBLIC, a.CreateAccount) // public
 }
 
+// Token Validator godoc
+// @Summary Validate token
+// @Description Register member API
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/check/authorize [post]
 func (a Auth) CheckAuth(context *gin.Context) {
 	err := a.AuthUsecase.TokenValid(context.Request)
 	if err != nil {
@@ -35,6 +43,14 @@ func (a Auth) CheckAuth(context *gin.Context) {
 	})
 }
 
+// CreateAccountMember godoc
+// @Summary CreateAccountMember user
+// @Description Register member API
+// @Tags Public
+// @Param Body formData models.BodyCreateAccount true "the body to create a user"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/createaccount [post]
 func (a Auth) CreateAccount(c *gin.Context) {
 	name := c.PostForm("name")
 	email := c.PostForm("email")
@@ -50,6 +66,15 @@ func (a Auth) CreateAccount(c *gin.Context) {
 	response := a.AccountUsecase.CreateUser(form_register, utilities.MEMBER)
 	c.JSON(response.Status, response)
 }
+
+// Login godoc
+// @Summary Login user
+// @Description Logging in to get jwt token to access admin or user api by roles
+// @Tags Public
+// @Param Body formData models.BodyLoginInput true "the body to login user"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/login [post]
 func (a Auth) Login(context *gin.Context) {
 	email := context.PostForm("email")
 	password := context.PostForm("password")
@@ -72,6 +97,14 @@ func (a Auth) Login(context *gin.Context) {
 	}
 }
 
+// Logout godoc
+// @Summary Logout Private
+// @Description logout from system
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/logout [post]
 func (a Auth) Logout(context *gin.Context) {
 	metadata, err := a.AuthUsecase.ExtractTokenMetadata(context.Request)
 	if err != nil {
@@ -92,6 +125,14 @@ func (a Auth) Logout(context *gin.Context) {
 	})
 }
 
+// Refres Token godoc
+// @Summary Refres Token Private
+// @Description Refres Token
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/refresh [post]
 func (a Auth) Refresh(context *gin.Context) {
 	var authReq models.Auth
 	err := context.ShouldBind(&authReq)

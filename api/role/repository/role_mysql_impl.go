@@ -104,12 +104,12 @@ func (a roleMysql) GetAllRole(orderby string) ([]*models.Role, error) {
 // 	return accounts, nil
 // }
 
-func (a roleMysql) CreateRole(name *models.FormName) error {
-	return a.db.Debug().Table("roles").Create(&name).Error
+func (a roleMysql) CreateRole(role *models.Role) error {
+	return a.db.Debug().Model(&models.Role{}).Create(&role).Error
 }
 
 func (a roleMysql) UpdateRoleName(id string, name string) error {
-	return a.db.Debug().Table("roles").Where("id = ?", id).Update("name", name).Error
+	return a.db.Debug().Model(&models.Role{}).Where("id = ?", id).Update("name", name).Error
 }
 
 func (a roleMysql) DeleteRoleById(id string) error {

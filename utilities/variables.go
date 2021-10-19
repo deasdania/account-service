@@ -21,6 +21,7 @@ const (
 
 	GET_ROLE    = "/role"
 	CREATE_ROLE = "/create/role"
+	UPDATE_ROLE = "/update/role"
 
 	MEMBER = "member"
 	ADMIN  = "admin"
