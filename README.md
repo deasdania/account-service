@@ -8,6 +8,7 @@ go mod tidy
 ## Create DB
 Database will generate after project run
 
+
 ## Environment Variable
 Fill the empty string with yours
 ```
@@ -18,6 +19,11 @@ ACCOUNT_DATABASE_PASSWORD=""
 ACCOUNT_DATABASE_NAME=""
 SECRET_KEY_JWT=""
 ACCOUNT_PORT=":8089"
+REDIS_URL=
+ADMIN_ACCOUNT_USERNAME=""
+ADMIN_ACCOUNT_EMAIL=""
+ADMIN_ACCOUNT_PASSWORD=""
+PORT_RUN="localhost:8089"
 ```
 ## How to run project
 To the root project directory
