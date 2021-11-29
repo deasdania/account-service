@@ -2,6 +2,7 @@ package repository
 
 import (
 	"account-metalit/api/models"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -11,15 +12,37 @@ type accountMysql struct {
 
 func (a accountMysql) GetAccountById(id string) (*models.User, error) {
 	var user models.User
-	err := a.db.Debug().Model(&models.User{}).First(&user, "id = ?", id)
-	if err.Error != nil {
-		return nil, err.Error
+	err := a.db.Debug().Model(&models.User{}).First(&user, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (a accountMysql) GetAccountByUuid(uuid string) (*models.User, error) {
+	var user models.User
+	err := a.db.Debug().Model(&models.User{}).First(&user, "uuid = ?", uuid).Error
+	if err != nil {
+		return nil, err
 	}
 	return &user, nil
 }
 
 func (a accountMysql) CreateAccount(user *models.User) error {
 	return a.db.Debug().Model(&models.User{}).Create(&user).Error
+}
+
+func (a accountMysql) GetcodeVerification(uuid string) (*models.UserCodeVerification, error) {
+	var userCode models.UserCodeVerification
+	err := a.db.Debug().Model(&models.UserCodeVerification{}).First(&userCode, "user_uuid = ?", uuid).Error
+	if err != nil {
+		return nil, err
+	}
+	return &userCode, nil
+}
+
+func (a accountMysql) CreatecodeVerification(codeVerification *models.UserCodeVerification) error {
+	return a.db.Debug().Model(&models.UserCodeVerification{}).Create(&codeVerification).Error
 }
 
 func (a accountMysql) CreateUserRole(user *models.User, role *models.Role) error {

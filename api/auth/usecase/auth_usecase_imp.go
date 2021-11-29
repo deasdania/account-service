@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 
@@ -192,6 +193,25 @@ func (a authUsecase) checkModeAuth(token string, result *models.AuthGoogle) (int
 		return 400, errors.New("invalid token id")
 	}
 	return 200, nil
+}
+
+func (a authUsecase) CreateVerificationCode(uuid models.UserUuid) error {
+	user, err := a.accountMysql.GetAccountByUuid(uuid.Uuid)
+	if err != nil {
+		return err
+	}
+
+	codeVer := models.UserCodeVerification{
+		UserUuid: user.Uuid,
+		Code:     "1234",
+	}
+
+	err = a.accountMysql.CreatecodeVerification(&codeVer)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewAuthUsecase(jwt authjwt.JWTService, repo repository.IAccountMysql) IAuthUsecase {

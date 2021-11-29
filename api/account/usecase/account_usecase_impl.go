@@ -7,13 +7,14 @@ import (
 	"account-metalit/response"
 	"account-metalit/utilities"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 	"os"
 	"regexp"
 	"strconv"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type accountUsecase struct {
@@ -116,6 +117,15 @@ func (a accountUsecase) CheckUserIsAdmin(email string) bool {
 	return isAdmin
 }
 
+func (a accountUsecase) CheckUserCodeVerification(email string) (string, error) {
+	user, _ := a.accountMysql.GetAccountByEmail(email)
+	codeModel, err := a.accountMysql.GetcodeVerification(user.Uuid)
+	if err != nil {
+		return "", err
+	}
+	return codeModel.Code, nil
+}
+
 func (a accountUsecase) CreateUser(form_register models.FormRegister, member_type string) *response.Response {
 	fmt.Println(form_register)
 	exist := a.CheckUserExist(form_register.Email)
@@ -154,7 +164,7 @@ func (a accountUsecase) CreateUser(form_register models.FormRegister, member_typ
 				return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
 			}
 		}
-		return a.responseStruct.ResponseError(200, []string{"Create User"}, map[string]string{
+		return a.responseStruct.ResponseSuccess(200, []string{"Create User"}, map[string]string{
 			"id":    fmt.Sprintf("%d", user.Id),
 			"uuid":  user.Uuid,
 			"name":  user.Name,

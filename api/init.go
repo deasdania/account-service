@@ -14,6 +14,7 @@ import (
 	"account-metalit/response"
 	"account-metalit/utilities"
 	"fmt"
+	// "github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -26,6 +27,7 @@ func Init(r *gin.Engine) {
 	db := config.InitDb()
 	redisDb := config.InitDbRedis()
 
+	// r.Use(cors.Default())
 	r.Use(utilities.CORSMiddleware())
 	private := r.Group("/api")
 

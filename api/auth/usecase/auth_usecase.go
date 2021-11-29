@@ -12,4 +12,5 @@ type IAuthUsecase interface {
 	TokenValid(r *http.Request) error
 	FetchAuth(authD *models.AccessDetails) (string, error)
 	Refresh(token string) (*models.AuthReq, int, error)
+	CreateVerificationCode(uuid models.UserUuid) error
 }

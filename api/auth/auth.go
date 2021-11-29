@@ -5,8 +5,9 @@ import (
 	"account-metalit/api/auth/usecase"
 	"account-metalit/api/models"
 	"account-metalit/utilities"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Auth struct {
@@ -64,7 +65,26 @@ func (a Auth) CreateAccount(c *gin.Context) {
 		ConfirmPassword: confirm_password,
 	}
 	response := a.AccountUsecase.CreateUser(form_register, utilities.MEMBER)
+	if response.Status == utilities.STATUSOK {
+		data := response.Data
+		uuid := getUuidFromDTO(data)
+		err := a.AuthUsecase.CreateVerificationCode(uuid)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "create account success but not create verification code",
+			})
+			return
+		}
+	}
 	c.JSON(response.Status, response)
+}
+
+func getUuidFromDTO(data interface{}) models.UserUuid {
+	m := data.(map[string]string)
+	userResponse := models.UserUuid{
+		Uuid: m["uuid"],
+	}
+	return userResponse
 }
 
 // Login godoc

@@ -25,6 +25,8 @@ const (
 
 	MEMBER = "member"
 	ADMIN  = "admin"
+
+	STATUSOK = 200
 )
 
 var (

@@ -9,6 +9,7 @@ type User struct {
 	Name        string    `json:"name" gorm:"not null;size:150"`
 	Email       string    `json:"email" gorm:"unique;not null;size:75"`
 	Password    string    `json:"password" gorm:"not null;size:70"`
+	IsVerified  bool      `json:"password" gorm:"default:false"`
 	CreatedDate time.Time `json:"created_date" gorm:"not null;default:CURRENT_TIMESTAMP;"`
 	UpdateDate  time.Time `json:"update_date" gorm:"not null;default:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;"`
 }
@@ -30,6 +31,17 @@ type FormUserRole struct {
 	RoleId int
 }
 
+type UserCodeVerification struct {
+	Id       int    `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
+	UserUuid string `json:"user_uuid" gorm:"unique;not null"`
+	Code     string `json:"code" gorm:"not null;size:6"`
+}
+
+type UserUuid struct {
+	Uuid string
+}
+
+// ini bisa diimplementasikan jika tidak menggunakan gorm
 // func (u *Users) BeforeCreate() (err error) {
 // 	u.CreatedDate = time.Now()
 // 	u.UpdateDate = time.Now()

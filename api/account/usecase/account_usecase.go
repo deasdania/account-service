@@ -12,4 +12,5 @@ type IAccountUsecase interface {
 	CreateUser(form_register models.FormRegister, member_type string) *response.Response
 	ChangePassword(form_change_pass models.FormChangePassword) *response.Response
 	CheckUserIsAdmin(email string) bool
+	CheckUserCodeVerification(email string) (string, error)
 }

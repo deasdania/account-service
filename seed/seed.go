@@ -3,17 +3,18 @@ package seed
 import (
 	"account-metalit/api/models"
 	"fmt"
+	"os"
+
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
-	"os"
 
 	"time"
 )
 
 func Load(db *gorm.DB) {
 	fmt.Println("open seed")
-	err := db.Debug().AutoMigrate(&models.User{}, &models.UserRole{}, &models.UserPermission{}, &models.Role{}, &models.UserRole{}, &models.Permission{}, &models.ContentType{}, &models.RolePermission{}).Error
+	err := db.Debug().AutoMigrate(&models.User{}, &models.UserCodeVerification{}, &models.UserRole{}, &models.UserPermission{}, &models.Role{}, &models.UserRole{}, &models.Permission{}, &models.ContentType{}, &models.RolePermission{}).Error
 	if err != nil {
 		fmt.Println("cannot migrate table: %v", err)
 	} else {
@@ -48,6 +49,7 @@ func Load(db *gorm.DB) {
 			Name:        os.Getenv("ADMIN_ACCOUNT_USERNAME"),
 			Email:       os.Getenv("ADMIN_ACCOUNT_EMAIL"),
 			Password:    string(bytes),
+			IsVerified:  true,
 			CreatedDate: time.Now(),
 			UpdateDate:  time.Now(),
 		}

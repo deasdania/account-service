@@ -7,10 +7,11 @@ import (
 	"account-metalit/api/models"
 	"account-metalit/utilities"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
 	"reflect"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type Account struct {
@@ -121,4 +122,23 @@ func (a Account) ChangePassword(c *gin.Context) {
 	response := a.AccountUsecase.ChangePassword(form_change_pass)
 
 	c.JSON(response.Status, response)
+}
+
+func (a Account) GetVerificationCode(c *gin.Context) {
+	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
+	if errA != nil {
+		fmt.Println(errA.Error())
+		return
+	}
+	email := metadata.Email
+	code, err := a.AccountUsecase.CheckUserCodeVerification(email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": code,
+	})
 }
