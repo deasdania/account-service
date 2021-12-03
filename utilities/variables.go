@@ -1,6 +1,8 @@
 package utilities
 
-import "os"
+import (
+	"os"
+)
 
 const (
 	// endpoints
@@ -30,6 +32,7 @@ const (
 )
 
 var (
+	SATU         = "1234"
 	KEY_JWT      = os.Getenv("SECRET_KEY_JWT")
 	ACCOUNT_PORT = os.Getenv("ACCOUNT_PORT")
 	REDIS_URL    = os.Getenv("REDIS_URL")

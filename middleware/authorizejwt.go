@@ -1,13 +1,14 @@
-package utilities
+package middleware
 
 import (
 	"account-metalit/api/auth/usecase"
 	"account-metalit/try"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TokenAuthMiddleware(authUsecase usecase.IAuthUsecase) gin.HandlerFunc {

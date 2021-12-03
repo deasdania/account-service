@@ -1,6 +1,8 @@
-package utilities
+package middleware
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 // import "github.com/gin-contrib/cors"
 

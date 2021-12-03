@@ -11,15 +11,18 @@ import (
 	reporole "account-metalit/api/role/repository"
 	usecaserole "account-metalit/api/role/usecase"
 	"account-metalit/config"
+	"account-metalit/middleware"
 	"account-metalit/response"
 	"account-metalit/utilities"
 	"fmt"
+
 	// "github.com/gin-contrib/cors"
+	"net/http"
+	"os"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"net/http"
-	"os"
 )
 
 func Init(r *gin.Engine) {
@@ -28,7 +31,7 @@ func Init(r *gin.Engine) {
 	redisDb := config.InitDbRedis()
 
 	// r.Use(cors.Default())
-	r.Use(utilities.CORSMiddleware())
+	r.Use(middleware.CORSMiddleware())
 	private := r.Group("/api")
 
 	public := r.Group("/api")
@@ -51,7 +54,7 @@ func Init(r *gin.Engine) {
 	authUsecase := usecaseauth.NewAuthUsecase(authService, accountMysql)
 	authController := auth.Auth{AccountUsecase: accountUsecase, AuthUsecase: authUsecase}
 	authController.Account(public)
-	private.Use(utilities.CheckRestClientJWT(authUsecase))
+	private.Use(middleware.CheckRestClientJWT(authUsecase))
 
 	//account
 	accountController := account.Account{AccountUsecase: accountUsecase, AuthUsecase: authUsecase}

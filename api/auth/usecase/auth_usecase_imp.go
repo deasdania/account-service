@@ -5,6 +5,8 @@ import (
 	"account-metalit/api/auth/authjwt"
 	"account-metalit/api/models"
 	"account-metalit/response"
+	"account-metalit/utilities"
+
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -203,7 +205,7 @@ func (a authUsecase) CreateVerificationCode(uuid models.UserUuid) error {
 
 	codeVer := models.UserCodeVerification{
 		UserUuid: user.Uuid,
-		Code:     "1234",
+		Code:     utilities.EncodeToStringa(6),
 	}
 
 	err = a.accountMysql.CreatecodeVerification(&codeVer)
