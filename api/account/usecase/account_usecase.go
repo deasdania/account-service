@@ -13,4 +13,5 @@ type IAccountUsecase interface {
 	ChangePassword(form_change_pass models.FormChangePassword) *response.Response
 	CheckUserIsAdmin(email string) bool
 	CheckUserCodeVerification(email string) (string, error)
+	VerifiedUserAccount(email string, code models.BodyCodeVerification) *response.Response
 }

@@ -25,14 +25,15 @@ const (
 	CREATE_ROLE = "/create/role"
 	UPDATE_ROLE = "/update/role"
 
-	MEMBER = "member"
-	ADMIN  = "admin"
+	GET_VERIFICATION_CODE  = "/codeverification"
+	PATCH_ACCOUNT_VERIFIED = "/user/verified"
+	MEMBER                 = "member"
+	ADMIN                  = "admin"
 
 	STATUSOK = 200
 )
 
 var (
-	SATU         = "1234"
 	KEY_JWT      = os.Getenv("SECRET_KEY_JWT")
 	ACCOUNT_PORT = os.Getenv("ACCOUNT_PORT")
 	REDIS_URL    = os.Getenv("REDIS_URL")

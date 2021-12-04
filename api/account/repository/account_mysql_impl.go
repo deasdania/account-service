@@ -65,6 +65,15 @@ func (a accountMysql) GetAccountByEmail(email string) (*models.User, error) {
 func (a accountMysql) UpdateAccountPassword(email string, hash string) error {
 	return a.db.Debug().Model(&models.User{}).Where("email = ?", email).Update("password", hash).Error
 }
+
+func (a accountMysql) UpdateAccountAsVerified(email string) error {
+	return a.db.Debug().Model(&models.User{}).Where("email = ?", email).Update("is_verified", true).Error
+}
+
+func (a accountMysql) DeleteAccountCodeVerification(uuid, code string) error {
+	return a.db.Debug().Delete(&models.UserCodeVerification{}).Where("user_uuid = ? AND code = ?", uuid, code).Error
+}
+
 func NewAccountMysql(db *gorm.DB) IAccountMysql {
 	return &accountMysql{db: db}
 }

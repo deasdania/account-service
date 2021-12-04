@@ -23,6 +23,10 @@ type BodyGetRole struct {
 	Orderby string `json:"orderby"`
 }
 
+type BodyCodeVerification struct {
+	Code string `json:"code" binding:"required"`
+}
+
 type BodyUpdateRole struct {
 	RoleId   string `json:"role_id" binding:"required"`
 	RoleName string `json:"role_name" binding:"required"`

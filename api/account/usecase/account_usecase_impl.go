@@ -6,6 +6,7 @@ import (
 	rolerepo "account-metalit/api/role/repository"
 	"account-metalit/response"
 	"account-metalit/utilities"
+	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -117,15 +118,6 @@ func (a accountUsecase) CheckUserIsAdmin(email string) bool {
 	return isAdmin
 }
 
-func (a accountUsecase) CheckUserCodeVerification(email string) (string, error) {
-	user, _ := a.accountMysql.GetAccountByEmail(email)
-	codeModel, err := a.accountMysql.GetcodeVerification(user.Uuid)
-	if err != nil {
-		return "", err
-	}
-	return codeModel.Code, nil
-}
-
 func (a accountUsecase) CreateUser(form_register models.FormRegister, member_type string) *response.Response {
 	fmt.Println(form_register)
 	exist := a.CheckUserExist(form_register.Email)
@@ -205,6 +197,55 @@ func (a accountUsecase) ChangePassword(form_change_pass models.FormChangePasswor
 			"email": user.Email,
 		})
 	}
+}
+
+func (a accountUsecase) CheckUserCodeVerification(email string) (string, error) {
+	user, err := a.accountMysql.GetAccountByEmail(email)
+	if err != nil {
+		return "", err
+	}
+	codeModel, err := a.accountMysql.GetcodeVerification(user.Uuid)
+	if err != nil {
+		if user.IsVerified {
+			return "", errors.New("the user is already verified")
+		}
+		return "", err
+	}
+	return codeModel.Code, nil
+}
+
+func (a accountUsecase) VerifiedUserAccount(email string, code models.BodyCodeVerification) *response.Response {
+	// Get User by Email
+	user, err := a.accountMysql.GetAccountByEmail(email)
+	if err != nil {
+		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+	}
+	// Get Code Verification by User UUID
+	codeModel, err := a.accountMysql.GetcodeVerification(user.Uuid)
+	if err != nil {
+		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+	}
+
+	// Check if the code is match
+	if code.Code == codeModel.Code {
+		// Update the user as verified
+		err := a.accountMysql.UpdateAccountAsVerified(email)
+		if err != nil {
+			return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+		}
+		// Delete the user code verification
+		err = a.accountMysql.DeleteAccountCodeVerification(user.Uuid, code.Code)
+		if err != nil {
+			return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+		}
+		// Return the success by return the email as the response body
+		return a.responseStruct.ResponseSuccess(200, []string{"Email is verified"}, map[string]string{
+			"email": email,
+		})
+	}
+
+	// Return the error while the code doesn't match
+	return a.responseStruct.ResponseError(400, []string{"Code doesn't match"}, nil)
 }
 
 func NewAccountUsecase(roleMysql rolerepo.IRoleMysql, accountMysql repository.IAccountMysql, responseStruct response.IResponse) IAccountUsecase {
