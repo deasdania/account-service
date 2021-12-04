@@ -24,7 +24,7 @@ func (a Account) Account(r *gin.RouterGroup) {
 	r.POST(utilities.CREATE_ACCOUNT, a.CreateAccount)
 	r.POST(utilities.CHANGE_PASSWORD, a.ChangePassword)
 	r.GET(utilities.GET_VERIFICATION_CODE, a.GetVerificationCode)
-	r.PATCH(utilities.PATCH_ACCOUNT_VERIFIED, a.VerifiedUser)
+	r.POST(utilities.PATCH_ACCOUNT_VERIFIED, a.VerifiedUser)
 
 	r.GET(utilities.GENERATE_UUID, a.GenerateUuid)
 	r.POST("/test", func(c *gin.Context) { return })
@@ -152,6 +152,14 @@ func (a Account) GetVerificationCode(c *gin.Context) {
 	})
 }
 
+// Verified the user
+// @Summary User Verified
+// @Description Match the code from the request with what it should be, and delete if it just the same and update the user as verified
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/user/verified [post]
 func (a Account) VerifiedUser(c *gin.Context) {
 	metadata, err := a.AuthUsecase.ExtractTokenMetadata(c.Request)
 	if err != nil {
