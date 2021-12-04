@@ -5,6 +5,7 @@ import (
 	"account-metalit/api/auth/usecase"
 	"account-metalit/api/models"
 	"account-metalit/utilities"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -75,6 +76,11 @@ func (a Auth) CreateAccount(c *gin.Context) {
 			})
 			return
 		}
+		code, err := a.AccountUsecase.CheckUserCodeVerification(email)
+		if err != nil {
+			fmt.Printf("codenya ga ada %s", err.Error())
+		}
+		fmt.Printf("ada codenya nih %s", code)
 	}
 	c.JSON(response.Status, response)
 }
