@@ -4,7 +4,7 @@ services:
   auth-srv:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ../Dockerfile
     container_name: auth_srv
     restart: on-failure
     volumes:
@@ -16,7 +16,7 @@ services:
       - ACCOUNT_DATABASE_PASSWORD="P@ssw0rd"
       - ACCOUNT_DATABASE_NAME="auth_metalit_db"
       - SECRET_KEY_JWT="RaH4si4Sekaleh"
-      - REDIS_URL=
+      - REDIS_URL=""
       - ADMIN_ACCOUNT_USERNAME=""
       - ADMIN_ACCOUNT_EMAIL=""
       - ADMIN_ACCOUNT_PASSWORD=""
@@ -26,7 +26,4 @@ services:
     expose:
       - "8080"
 volumes:
-  core-rd-db:
-networks:
-  mekar-bpm_mekarnet:
-    external: true
+  auth-service:
