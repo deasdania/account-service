@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"account-metalit/api/models"
+	"auth-service/api/models"
 
 	"github.com/jinzhu/gorm"
 )

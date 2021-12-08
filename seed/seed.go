@@ -1,7 +1,7 @@
 package seed
 
 import (
-	"account-metalit/api/models"
+	"auth-service/api/models"
 	"fmt"
 	"os"
 

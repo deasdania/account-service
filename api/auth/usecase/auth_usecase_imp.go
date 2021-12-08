@@ -1,11 +1,11 @@
 package usecase
 
 import (
-	"account-metalit/api/account/repository"
-	"account-metalit/api/auth/authjwt"
-	"account-metalit/api/models"
-	"account-metalit/response"
-	"account-metalit/utilities"
+	"auth-service/api/account/repository"
+	"auth-service/api/auth/authjwt"
+	"auth-service/api/models"
+	"auth-service/response"
+	"auth-service/utilities"
 
 	"encoding/json"
 	"errors"

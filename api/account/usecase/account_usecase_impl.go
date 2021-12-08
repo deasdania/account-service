@@ -1,11 +1,11 @@
 package usecase
 
 import (
-	"account-metalit/api/account/repository"
-	"account-metalit/api/models"
-	rolerepo "account-metalit/api/role/repository"
-	"account-metalit/response"
-	"account-metalit/utilities"
+	"auth-service/api/account/repository"
+	"auth-service/api/models"
+	rolerepo "auth-service/api/role/repository"
+	"auth-service/response"
+	"auth-service/utilities"
 	"errors"
 	"fmt"
 	"os"

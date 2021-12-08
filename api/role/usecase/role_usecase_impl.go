@@ -1,9 +1,9 @@
 package usecase
 
 import (
-	"account-metalit/api/models"
-	"account-metalit/api/role/repository"
-	"account-metalit/response"
+	"auth-service/api/models"
+	"auth-service/api/role/repository"
+	"auth-service/response"
 	"fmt"
 	"strconv"
 )

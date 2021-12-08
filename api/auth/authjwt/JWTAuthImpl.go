@@ -1,15 +1,16 @@
 package authjwt
 
 import (
-	"account-metalit/api/models"
+	"auth-service/api/models"
 	"errors"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/go-redis/redis"
-	"github.com/google/uuid"
 	"log"
 	"os"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/go-redis/redis"
+	"github.com/google/uuid"
 )
 
 type AuthJWT struct {

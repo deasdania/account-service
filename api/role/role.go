@@ -1,16 +1,17 @@
 package role
 
 import (
-	accountusecase "account-metalit/api/account/usecase"
-	authusecase "account-metalit/api/auth/usecase"
-	"account-metalit/api/models"
-	"account-metalit/api/role/usecase"
-	"account-metalit/utilities"
+	accountusecase "auth-service/api/account/usecase"
+	authusecase "auth-service/api/auth/usecase"
+	"auth-service/api/models"
+	"auth-service/api/role/usecase"
+	"auth-service/utilities"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Role struct {

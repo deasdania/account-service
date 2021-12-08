@@ -1,13 +1,15 @@
 package config
 
 import (
-	// "account-metalit/api/models"
-	"account-metalit/seed"
+	// "auth-service/api/models"
+	"auth-service/seed"
 	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/jinzhu/gorm"
 	"os"
+
+	"github.com/jinzhu/gorm"
 )
 
 func InitDb() *gorm.DB {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"account-metalit/api"
-	"account-metalit/docs"
+	"auth-service/api"
+	"auth-service/docs"
 	"log"
 	"os"
 

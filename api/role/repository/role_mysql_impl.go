@@ -1,10 +1,11 @@
 package repository
 
 import (
-	"account-metalit/api/models"
+	"auth-service/api/models"
 	"fmt"
-	"github.com/jinzhu/gorm"
 	"strings"
+
+	"github.com/jinzhu/gorm"
 )
 
 type roleMysql struct {

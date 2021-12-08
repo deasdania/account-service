@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"account-metalit/api/models"
-	"account-metalit/response"
+	"auth-service/api/models"
+	"auth-service/response"
 )
 
 type IRoleUsecase interface {

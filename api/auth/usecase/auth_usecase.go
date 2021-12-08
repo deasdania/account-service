@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"account-metalit/api/models"
+	"auth-service/api/models"
 	"net/http"
 )
 

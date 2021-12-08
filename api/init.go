@@ -1,20 +1,18 @@
 package api
 
 import (
-	"account-metalit/api/account"
-	"account-metalit/api/account/repository"
-	"account-metalit/api/account/usecase"
-	"account-metalit/api/auth"
-	"account-metalit/api/auth/authjwt"
-	usecaseauth "account-metalit/api/auth/usecase"
-	"account-metalit/api/role"
-	reporole "account-metalit/api/role/repository"
-	usecaserole "account-metalit/api/role/usecase"
-	"account-metalit/config"
-	"account-metalit/middleware"
-	"account-metalit/response"
-	"account-metalit/utilities"
-	"fmt"
+	"auth-service/api/account"
+	"auth-service/api/account/repository"
+	"auth-service/api/account/usecase"
+	"auth-service/api/auth"
+	"auth-service/api/auth/authjwt"
+	usecaseauth "auth-service/api/auth/usecase"
+	"auth-service/api/role"
+	reporole "auth-service/api/role/repository"
+	usecaserole "auth-service/api/role/usecase"
+	"auth-service/config"
+	"auth-service/middleware"
+	"auth-service/response"
 
 	// "github.com/gin-contrib/cors"
 	"net/http"
@@ -64,7 +62,6 @@ func Init(r *gin.Engine) {
 	roleController := role.Role{RoleUsecase: roleUsecase, AuthUsecase: authUsecase, AccountUsecase: accountUsecase}
 	roleController.Role(private)
 
-	fmt.Println(utilities.ACCOUNT_PORT)
 	r.Run(os.Getenv("PORT_RUN"))
 
 }

@@ -1,4 +1,4 @@
-module account-metalit
+module auth-service
 
 go 1.14
 

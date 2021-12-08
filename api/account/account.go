@@ -1,11 +1,11 @@
 package account
 
 import (
-	"account-metalit/api/account/usecase"
-	authusecase "account-metalit/api/auth/usecase"
+	"auth-service/api/account/usecase"
+	authusecase "auth-service/api/auth/usecase"
 
-	"account-metalit/api/models"
-	"account-metalit/utilities"
+	"auth-service/api/models"
+	"auth-service/utilities"
 	"fmt"
 	"net/http"
 	"reflect"

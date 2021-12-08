@@ -1,6 +1,6 @@
 package repository
 
-import "account-metalit/api/models"
+import "auth-service/api/models"
 
 type IRoleMysql interface {
 	GetRoleByName(name string) (*models.Role, error)

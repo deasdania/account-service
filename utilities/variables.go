@@ -34,7 +34,6 @@ const (
 )
 
 var (
-	KEY_JWT      = os.Getenv("SECRET_KEY_JWT")
-	ACCOUNT_PORT = os.Getenv("ACCOUNT_PORT")
-	REDIS_URL    = os.Getenv("REDIS_URL")
+	KEY_JWT   = os.Getenv("SECRET_KEY_JWT")
+	REDIS_URL = os.Getenv("REDIS_URL")
 )

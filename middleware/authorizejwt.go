@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"account-metalit/api/auth/usecase"
-	"account-metalit/try"
+	"auth-service/api/auth/usecase"
+	"auth-service/try"
 	"errors"
 	"fmt"
 	"net/http"

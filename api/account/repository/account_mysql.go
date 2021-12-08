@@ -1,6 +1,6 @@
 package repository
 
-import "account-metalit/api/models"
+import "auth-service/api/models"
 
 type IAccountMysql interface {
 	// User Mysql Manipulation
