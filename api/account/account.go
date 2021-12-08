@@ -23,7 +23,7 @@ func (a Account) Account(r *gin.RouterGroup) {
 	r.GET(utilities.GET_ACCOUNT, a.GetUser)
 	r.POST(utilities.CREATE_ACCOUNT, a.CreateAccount)
 	r.POST(utilities.CHANGE_PASSWORD, a.ChangePassword)
-	r.GET(utilities.GET_VERIFICATION_CODE, a.GetVerificationCode)
+	r.POST(utilities.RESEND_VERIFICATION_CODE, a.ResendVerificationCode)
 	r.POST(utilities.PATCH_ACCOUNT_VERIFIED, a.VerifiedUser)
 
 	r.GET(utilities.GENERATE_UUID, a.GenerateUuid)
@@ -133,7 +133,7 @@ func (a Account) ChangePassword(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} map[string]interface{}
 // @Router /api/codeverification [get]
-func (a Account) GetVerificationCode(c *gin.Context) {
+func (a Account) ResendVerificationCode(c *gin.Context) {
 	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
 	if errA != nil {
 		fmt.Println(errA.Error())
@@ -147,8 +147,9 @@ func (a Account) GetVerificationCode(c *gin.Context) {
 		})
 		return
 	}
+	fmt.Printf("resend codeverification %v \n", code)
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
+		"message": "the verification code sent to the email",
 	})
 }
 

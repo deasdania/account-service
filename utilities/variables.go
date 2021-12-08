@@ -25,10 +25,10 @@ const (
 	CREATE_ROLE = "/create/role"
 	UPDATE_ROLE = "/update/role"
 
-	GET_VERIFICATION_CODE  = "/codeverification"
-	PATCH_ACCOUNT_VERIFIED = "/user/verified"
-	MEMBER                 = "member"
-	ADMIN                  = "admin"
+	RESEND_VERIFICATION_CODE = "/resend/codeverification"
+	PATCH_ACCOUNT_VERIFIED   = "/user/verified"
+	MEMBER                   = "member"
+	ADMIN                    = "admin"
 
 	STATUSOK = 200
 )
