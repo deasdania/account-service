@@ -2,46 +2,63 @@ version: "2"
 
 services: 
   auth_service_db:
-    image: mysql:5.6.26
+    image: mysql:8.0.27
     container_name: auth_service_db
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 'P@ssw0rd'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: 'P@ssw0rd'
+      MYSQL_ROOT_PASSWORD: 'mekarroot'
+      MYSQL_USER: 'mekar'
+      MYSQL_PASSWORD: 'mekar'
       MYSQL_DATABASE: auth-db-local
       MYSQL_ROOT_HOST: '%'
     ports:
-      - '33070:3306'
+      - '33064:3306'
     expose:
-      - '33070'
+      - '33064'
     volumes:
       - auth-service-db:/var/lib/mysql
+  metalit_redis:
+    container_name: metalit_redis
+    image: redis:6.2.6
+    restart: always
+    ports:
+      - '63793:6379'
+    expose:
+      - '63793'
+    volumes:
+      - metalit_redis:/data
   auth_service:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     container_name: auth_service
     restart: on-failure
     volumes:
-      - .:/auth-service
+      - .:/auth_service
     environment:
-      - ACCOUNT_DATABASE_HOST=auth_service_db
-      - ACCOUNT_DATABASE_PORT=33070
-      - ACCOUNT_DATABASE_USER=root
-      - ACCOUNT_DATABASE_PASSWORD=P@ssw0rd
+      - ACCOUNT_DATABASE_HOST=host.docker.internal
+      - ACCOUNT_DATABASE_PORT=33064
+      - ACCOUNT_DATABASE_USER=mekar
+      - ACCOUNT_DATABASE_PASSWORD=mekar
       - ACCOUNT_DATABASE_NAME=auth-db-local
       - SECRET_KEY_JWT=RaH4si4Sekaleh
-      - REDIS_URL
+      - REDIS_URL=host.docker.internal:63793
       - ADMIN_ACCOUNT_USERNAME="Dea Dania"
       - ADMIN_ACCOUNT_EMAIL="deadania14@gmail.com"
       - ADMIN_ACCOUNT_PASSWORD="P@ssw0rd!!"
-      - PORT_RUN="8080"
+      - PORT_RUN=0.0.0.0:8080
     ports:
       - "8080:8080"
+    depends_on:
+      - auth_service_db
+    links:
+      - auth_service_db     
+    extra_hosts:
+      - host.docker.internal:host-gateway
 volumes:
   auth-service-db:
+  metalit_redis:
 networks:
   metalitnet:
     driver: bridge
