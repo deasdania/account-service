@@ -45,8 +45,8 @@ services:
       - SECRET_KEY_JWT=RaH4si4Sekaleh
       - REDIS_URL=host.docker.internal:63793
       - ADMIN_ACCOUNT_USERNAME="Dea Dania"
-      - ADMIN_ACCOUNT_EMAIL="deadania14@gmail.com"
-      - ADMIN_ACCOUNT_PASSWORD="P@ssw0rd!!"
+      - ADMIN_ACCOUNT_EMAIL=deadania14@gmail.com
+      - ADMIN_ACCOUNT_PASSWORD=P@ssw0rd!!
       - PORT_RUN=0.0.0.0:8080
     ports:
       - "8080:8080"

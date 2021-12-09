@@ -2,6 +2,7 @@ package seed
 
 import (
 	"auth-service/api/models"
+	"auth-service/utilities"
 	"fmt"
 	"os"
 
@@ -42,12 +43,13 @@ func Load(db *gorm.DB) {
 		}
 
 		bytes, _ := bcrypt.GenerateFromPassword([]byte(os.Getenv("ADMIN_ACCOUNT_PASSWORD")), 14)
-
+		username := utilities.TrimQuotes(os.Getenv("ADMIN_ACCOUNT_USERNAME"))
+		email := utilities.TrimQuotes(os.Getenv("ADMIN_ACCOUNT_EMAIL"))
 		var user = models.User{
 			Id:          1,
 			Uuid:        uuid.New().String(),
-			Name:        os.Getenv("ADMIN_ACCOUNT_USERNAME"),
-			Email:       os.Getenv("ADMIN_ACCOUNT_EMAIL"),
+			Name:        username,
+			Email:       email,
 			Password:    string(bytes),
 			IsVerified:  true,
 			CreatedDate: time.Now(),
