@@ -1,4 +1,4 @@
-FROM golang:alphine
+FROM golang:alpine
 
 ENV GO111MODULE=on
 
@@ -6,8 +6,9 @@ RUN apk update && apk add --no-cache git
 
 WORKDIR /app/auth-service
 
-RUN go mod tidy
-
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
 COPY . . 
 
 # Install the air binary so we get live code-reloading when we save files
