@@ -7,9 +7,9 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 'mekarroot'
-      MYSQL_USER: 'mekar'
-      MYSQL_PASSWORD: 'mekar'
+      MYSQL_ROOT_PASSWORD: 'metalitroot'
+      MYSQL_USER: 'metalit'
+      MYSQL_PASSWORD: 'metalit'
       MYSQL_DATABASE: auth-db-local
       MYSQL_ROOT_HOST: '%'
     ports:
@@ -39,8 +39,8 @@ services:
     environment:
       - ACCOUNT_DATABASE_HOST=host.docker.internal
       - ACCOUNT_DATABASE_PORT=33064
-      - ACCOUNT_DATABASE_USER=mekar
-      - ACCOUNT_DATABASE_PASSWORD=mekar
+      - ACCOUNT_DATABASE_USER=metalit
+      - ACCOUNT_DATABASE_PASSWORD=metalit
       - ACCOUNT_DATABASE_NAME=auth-db-local
       - SECRET_KEY_JWT=RaH4si4Sekaleh
       - REDIS_URL=host.docker.internal:63793
