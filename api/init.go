@@ -13,6 +13,7 @@ import (
 	"auth-service/config"
 	"auth-service/middleware"
 	"auth-service/response"
+	"fmt"
 
 	// "github.com/gin-contrib/cors"
 	"net/http"
@@ -62,6 +63,7 @@ func Init(r *gin.Engine) {
 	roleController := role.Role{RoleUsecase: roleUsecase, AuthUsecase: authUsecase, AccountUsecase: accountUsecase}
 	roleController.Role(private)
 
-	r.Run(os.Getenv("PORT_RUN"))
+	r.Run(fmt.Sprintf(os.Getenv("PORT_RUN")))
+	// r.Run(os.Getenv("PORT_RUN"))
 
 }

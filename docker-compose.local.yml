@@ -1,21 +1,22 @@
 version: "2"
 
-services: 
+services:
   auth_service_db:
     image: mysql:8.0.27
+    platform: linux/amd64
     container_name: auth_service_db
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: 'metalitroot'
-      MYSQL_USER: 'metalit'
-      MYSQL_PASSWORD: 'metalit'
+      MYSQL_ROOT_PASSWORD: "metalitroot"
+      MYSQL_USER: "metalit"
+      MYSQL_PASSWORD: "metalit"
       MYSQL_DATABASE: auth-db-local
-      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_HOST: "%"
     ports:
-      - '33064:3306'
+      - "33064:3306"
     expose:
-      - '33064'
+      - "33064"
     volumes:
       - auth-service-db:/var/lib/mysql
   metalit_redis:
@@ -23,9 +24,9 @@ services:
     image: redis:6.2.6
     restart: always
     ports:
-      - '63793:6379'
+      - "63793:6379"
     expose:
-      - '63793'
+      - "63793"
     volumes:
       - metalit_redis:/data
   auth_service:
@@ -47,13 +48,13 @@ services:
       - ADMIN_ACCOUNT_USERNAME="Dea Dania"
       - ADMIN_ACCOUNT_EMAIL=deadania14@gmail.com
       - ADMIN_ACCOUNT_PASSWORD=P@ssw0rd!!
-      - PORT_RUN=0.0.0.0:8080
+      - PORT_RUN=:8080
     ports:
       - "8080:8080"
     depends_on:
       - auth_service_db
     links:
-      - auth_service_db     
+      - auth_service_db
     extra_hosts:
       - host.docker.internal:host-gateway
 volumes:
